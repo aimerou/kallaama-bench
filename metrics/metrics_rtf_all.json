@@ -1,0 +1,42 @@
+[
+    {
+        "model_name": "mira-tts",
+        "corpus": "monolingual",
+        "rtf": 0.16888214588879627
+    },
+    {
+        "model_name": "mira-tts",
+        "corpus": "code-mixed",
+        "rtf": 0.16770583799205072
+    },
+    {
+        "model_name": "mira-tts-monolingual",
+        "corpus": "monolingual",
+        "rtf": 0.15540550186073818
+    },
+    {
+        "model_name": "mira-tts-monolingual",
+        "corpus": "code-mixed",
+        "rtf": 0.15459468349737743
+    },
+    {
+        "model_name": "orpheus-tts",
+        "corpus": "monolingual",
+        "rtf": 2.258470531287961
+    },
+    {
+        "model_name": "orpheus-tts",
+        "corpus": "code-mixed",
+        "rtf": 2.217118583772137
+    },
+    {
+        "model_name": "orpheus-tts-monolingual",
+        "corpus": "monolingual",
+        "rtf": 3.17874069333428
+    },
+    {
+        "model_name": "orpheus-tts-monolingual",
+        "corpus": "code-mixed",
+        "rtf": 3.1455915567259507
+    }
+]

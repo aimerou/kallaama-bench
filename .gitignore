@@ -1,0 +1,8 @@
+*.cache
+*.log
+*.tmp
+*.env
+*__pycache__/
+*unsloth_compiled_cache/
+data/*
+models/*
