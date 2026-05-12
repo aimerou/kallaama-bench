@@ -93,8 +93,7 @@ kallaamabench/
 ### 1. Install dependencies
 
 ```bash
-pip install torch torchaudio librosa jiwer scipy numpy \
-            utmosv2 transformers speechbrain
+pip install -r requirements.txt
 ```
 
 ### 2. Synthesise the test sentences
