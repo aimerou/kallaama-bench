@@ -89,6 +89,6 @@ def download_tts_dataset(dataset_name, dest_folder, split="train", max_samples=N
 if __name__ == "__main__":
     download_tts_dataset(
         dataset_name="aimerou/kallaama-bench-filtered",
-        dest_folder="/root/kallaama-bench/dev",
-        split="train"
+        dest_folder="/root/kallaama-bench/data/",
+        split="test"
     )

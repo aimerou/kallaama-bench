@@ -6,7 +6,7 @@ one transcription per line.
 
 Usage
 -----
-python extract_corpus.py --metadata /root/kallaama-bench/dev/metadata.csv --output /root/kallaama-bench/dev/corpus.txt
+python extract_corpus.py --metadata /root/kallaama-bench/data/metadata.csv --output /root/kallaama-bench/data/corpus.txt
 """
 
 import argparse
