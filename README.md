@@ -6,7 +6,7 @@
 
 KallaamaBench provides a standardised, blind evaluation protocol for
 Wolof Text-to-Speech systems.  Participants synthesise audio from a fixed
-set of 1 529 text prompts; a server-side evaluation script scores the
+set of 1502 text prompts; a server-side evaluation script scores the
 submissions against hidden reference data.  No reference audio is ever released.
 
 ---
@@ -51,7 +51,7 @@ computed from a separate MOS round run at each quarterly release.
 
 ## Wolof-specific design choices
 
-- **Phonetic coverage**: the 1 529 test sentences were selected to maximise
+- **Phonetic coverage**: the 1502 test sentences were selected to maximise
   coverage of Wolof phonemes, including ejectives (ƴ, ñ), prenasalised
   consonants, the ATR vowel distinction, and tonal patterns.
 - **Code-switching**: ~8 % of sentences contain French loanwords, reflecting
@@ -73,7 +73,7 @@ kallaamabench/
 ├── README.md                # This file
 │
 ├── data/
-│   ├── corpus.txt           # 1 529 Wolof sentences (one per line)
+│   ├── corpus.txt           # 1502 Wolof sentences (one per line)
 │   ├── references.npz       # Precomputed speaker embeddings + F0 stats
 │   └── rtf_scores.json      # Optional RTF records by model name
 │
@@ -173,14 +173,14 @@ python evaluate.py precompute \
 ```
 
 This extracts ECAPA-TDNN speaker embeddings and pYIN F0 histograms for all
-1 529 samples and stores them in a compressed NumPy archive.  Participants
+1502 samples and stores them in a compressed NumPy archive.  Participants
 never need to run this command.
 
 ---
 
 ## Data policy
 
-- The **test set audio** (1 529 reference recordings) is **never released**.
+- The **test set audio** (1502 reference recordings) is **never released**.
 - `data/corpus.txt` (text prompts) and `data/references.npz` (precomputed
   vectors) are public.
 - `references.npz` contains compressed speaker embeddings (192-dim float32)

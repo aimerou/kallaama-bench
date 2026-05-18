@@ -1,9 +1,16 @@
 """
+hf_dataset_download.py
+-----------------------
 Download a TTS dataset from Hugging Face and save audio files + metadata
+
+Requirements
+------------
+pip install -r requirements.txt
+export HF_TOKEN=your_huggingface_token
 
 Example Usage
 -------------
-python3 download_hf_dataset.py
+python3 hf_dataset_download.py
 """
 
 import os
@@ -13,6 +20,9 @@ from tqdm import tqdm
 import soundfile as sf
 
 HF_TOKEN = os.getenv("HF_TOKEN")
+DATASET_NAME = "aimerou/kallaama-bench-filtered"
+DEST_FOLDER = "/root/kallaama/data/"
+SPLIT = "test"
 
 def download_tts_dataset(dataset_name, dest_folder, split="train", max_samples=None):
     """
@@ -88,7 +98,7 @@ def download_tts_dataset(dataset_name, dest_folder, split="train", max_samples=N
 
 if __name__ == "__main__":
     download_tts_dataset(
-        dataset_name="aimerou/kallaama-bench-filtered",
-        dest_folder="/root/kallaama-bench/data/",
-        split="test"
+        dataset_name=DATASET_NAME,
+        dest_folder=DEST_FOLDER,
+        split=SPLIT
     )
