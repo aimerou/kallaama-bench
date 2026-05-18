@@ -8,8 +8,8 @@
 my_submission/
 ├── metadata.json
 └── audio/
-    ├── 0001.wav
-    ├── 0002.wav
+    ├── audio_0001.wav
+    ├── audio_0002.wav
     └── … (1 529 files total)
 ```
 
@@ -36,33 +36,19 @@ Required fields: `team`, `system`, `submission_date`, `rtf`, `contact`.
 
 | Property | Requirement |
 |---|---|
-| Format | 16-bit PCM WAV |
+| Format | WAV (16-bit PCM) |
 | Sample rate | 16 000 Hz |
 | Channels | Mono |
-| Naming | `filename` value from `corpus.csv` (e.g. `0001.wav`) |
+| Naming | `audio_xxxx.wav` |
 | Count | Exactly **1 529** files |
 
 Each file must correspond to the matching row in `corpus.csv` by filename.
 Misaligned files will silently produce incorrect WER and F0 scores.
 
 ```bash
-# Convert with ffmpeg
+# Convert to 16-bit PCM WAV with ffmpeg
 ffmpeg -i input.wav -ar 16000 -ac 1 -sample_fmt s16 output.wav
 ```
-
----
-
-## Corpus format
-
-The corpus is a pipe-separated CSV at `data/corpus.csv`:
-
-```
-filename|transcription|speaker|gender
-0001.wav|Wolof sentence here...|spk01|F
-```
-
-Use the `transcription` column as input to your TTS model and the `filename`
-column to name your output WAV files.
 
 ---
 

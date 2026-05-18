@@ -5,4 +5,3 @@
 *__pycache__/
 *unsloth_compiled_cache/
 data/audio/
-data/references.npz
