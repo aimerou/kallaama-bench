@@ -10,7 +10,7 @@ my_submission/
 └── audio/
     ├── audio_0001.wav
     ├── audio_0002.wav
-    └── … (1 529 files total)
+    └── … (1502 files total)
 ```
 
 ---
@@ -22,13 +22,13 @@ my_submission/
     "team"            : "YourTeamName",
     "system"          : "Short description of your TTS system",
     "submission_date" : "YYYY-MM-DD",
-    "rtf"             : 0.042,
     "contact"         : "yourname@example.com",
+    "rtf"             : 0.042,
     "notes"           : "optional — hardware, training data, etc."
 }
 ```
 
-Required fields: `team`, `system`, `submission_date`, `rtf`, `contact`.
+Required fields: `team`, `system`, `submission_date`, `contact`.
 
 ---
 
@@ -40,7 +40,7 @@ Required fields: `team`, `system`, `submission_date`, `rtf`, `contact`.
 | Sample rate | 16 000 Hz |
 | Channels | Mono |
 | Naming | `audio_xxxx.wav` |
-| Count | Exactly **1 529** files |
+| Count | Exactly **1502** files |
 
 Each file must correspond to the matching row in `corpus.csv` by filename.
 Misaligned files will silently produce incorrect WER and F0 scores.

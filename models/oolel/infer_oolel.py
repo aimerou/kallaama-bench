@@ -1,0 +1,111 @@
+"""
+Oolel TTS Inference Script
+==========================
+
+Requirements
+------------
+pip install -r requirements.txt
+apt-get update && apt-get install -y ffmpeg
+
+Usage
+-----
+python infer_oolel.py
+"""
+
+import os
+import json
+import time
+import torch
+import torchaudio
+import pandas as pd
+from transformers import AutoModel
+from huggingface_hub import snapshot_download
+from tqdm import tqdm
+from verbalizer import WolofTTSVerbalizer
+
+DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
+
+CORPUS_FILE          = "/root/wolof-tts/evaluation/data/corpus.csv"
+REFERENCE_AUDIO_FILE = "/root/wolof-tts/evaluation/data/references/spk01.wav"
+OUTPUT_DIR           = "/root/wolof-tts/evaluation/outputs/oolel-voices"
+OUTPUT_AUDIO_DIR     = os.path.join(OUTPUT_DIR, "audio")
+OUTPUT_METADATA      = os.path.join(OUTPUT_DIR, "metadata.json")
+
+MODEL_REPO = "soynade-research/Oolel-Voices"
+
+# Team information written to metadata.json
+METADATA = {
+    "team"            : "Soynade Research",
+    "system"          : "Oolel Voices",
+    "submission_date" : "2026-05-19",
+    "contact"         : "contact@example.com",
+    "notes"           : "RTF measured on a single NVIDIA A100 40 GB",
+}
+
+# Voice expressivity parameters
+CFG_WEIGHT   = 0.5
+EXAGGERATION = 0.2
+TEMPERATURE  = 0.3
+
+
+def generate_audio(text, model, reference_audio_path):
+    wav = model.generate(
+        text,
+        audio_prompt_path=reference_audio_path,
+        cfg_weight=CFG_WEIGHT,
+        exaggeration=EXAGGERATION,
+        temperature=TEMPERATURE,
+    )
+    return wav
+
+
+if __name__ == "__main__":
+    os.makedirs(OUTPUT_AUDIO_DIR, exist_ok=True)
+
+    # Load corpus
+    corpus = pd.read_csv(CORPUS_FILE, sep="|", header=0, on_bad_lines="skip", dtype=str)
+    corpus = corpus.dropna(subset=["filename", "transcription"]).reset_index(drop=True)
+    print(f"Loaded {len(corpus)} sentences from corpus.")
+
+    # Load model
+    model_path = snapshot_download(repo_id=MODEL_REPO)
+    model      = AutoModel.from_pretrained(model_path, trust_remote_code=True)
+    model.to(DEVICE)
+    output_sampling_rate = model.sr
+    print("Model loaded successfully!")
+
+    # Initialize verbalizer
+    verbalizer = WolofTTSVerbalizer()
+
+    # Warm up the model
+    for _ in range(3):
+        _ = generate_audio(verbalizer.verbalize("This is a warm-up sentence."),
+                           model, REFERENCE_AUDIO_FILE)
+    print("Model warm-up complete.")
+
+    # Generate audio and compute RTF
+    rtf_values = []
+    for _, row in tqdm(corpus.iterrows(), total=len(corpus), desc="Generating audio"):
+        sentence = row["transcription"].strip()
+        if not sentence:
+            continue
+
+        start_time     = time.time()
+        wav            = generate_audio(verbalizer.verbalize(sentence), model, REFERENCE_AUDIO_FILE)
+        waveform       = wav if wav.dim() == 2 else wav.unsqueeze(0)
+        inference_time = time.time() - start_time
+        audio_duration = waveform.shape[1] / output_sampling_rate
+        rtf            = inference_time / audio_duration if audio_duration > 0 else float("inf")
+        rtf_values.append(rtf)
+
+        torchaudio.save(os.path.join(OUTPUT_AUDIO_DIR, row["filename"]), waveform, output_sampling_rate)
+
+    avg_rtf = sum(rtf_values) / len(rtf_values) if rtf_values else 0.0
+    print(f"Audio files saved to: {OUTPUT_AUDIO_DIR}")
+    print(f"Average RTF: {avg_rtf:.3f}")
+
+    # Save team info + RTF to metadata.json
+    metadata = {**METADATA, "rtf": round(avg_rtf, 4)}
+    with open(OUTPUT_METADATA, "w") as f:
+        json.dump(metadata, f, indent=4)
+    print(f"Metadata saved to: {OUTPUT_METADATA}")
