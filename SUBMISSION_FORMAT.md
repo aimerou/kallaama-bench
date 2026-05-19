@@ -66,7 +66,7 @@ Validate locally before submitting:
 ```bash
 python evaluate.py evaluate \
     --submission  path/to/my_dev_submission/ \
-    --references  dev/references_dev.npz \
+    --groundtruth  dev/groundtruth_dev.npz \
     --corpus      dev/corpus_dev.csv \
     --output      dev_results.json
 ```

@@ -45,13 +45,13 @@ kallaamabench/
 │
 ├── data/
 │   ├── corpus.csv           # 1502 Wolof sentences (filename|transcription|speaker|gender)
-│   ├── references.npz       # Precomputed speaker embeddings + F0 stats
+│   ├── groundtruth.npz       # Precomputed speaker embeddings + F0 stats
 │   └── rtf_scores.json
 │
 └── dev/
     ├── corpus_dev.csv        # 100-sentence dev subset
     ├── audio/                # Reference audio for dev set (WAV, 16 kHz mono)
-    └── references_dev.npz
+    └── groundtruth_dev.npz
 ```
 
 ---
@@ -96,7 +96,7 @@ for _, row in corpus.iterrows():
 ```bash
 python evaluate.py evaluate \
     --submission  my_submission/ \
-    --references  dev/references_dev.npz \
+    --groundtruth  dev/groundtruth_dev.npz \
     --corpus      dev/corpus_dev.csv \
     --output      dev_results.json
 ```
@@ -111,8 +111,8 @@ See [SUBMISSION_FORMAT.md](SUBMISSION_FORMAT.md) for details.
 ## Data policy
 
 - The test set audio (1502 recordings) is **never released**.
-- `data/corpus.csv` and `data/references.npz` are public.
-- `references.npz` contains speaker embeddings (192-dim) and F0 histogram statistics only — raw audio cannot be reconstructed.
+- `data/corpus.csv` and `data/groundtruth.npz` are public.
+- `groundtruth.npz` contains speaker embeddings (192-dim) and F0 histogram statistics only — raw audio cannot be reconstructed.
 
 ---
 

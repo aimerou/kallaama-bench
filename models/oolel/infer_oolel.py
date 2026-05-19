@@ -25,11 +25,11 @@ from verbalizer import WolofTTSVerbalizer
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
-CORPUS_FILE          = "/root/wolof-tts/evaluation/data/corpus.csv"
-REFERENCE_AUDIO_FILE = "/root/wolof-tts/evaluation/data/references/spk01.wav"
-OUTPUT_DIR           = "/root/wolof-tts/evaluation/outputs/oolel-voices"
-OUTPUT_AUDIO_DIR     = os.path.join(OUTPUT_DIR, "audio")
-OUTPUT_METADATA      = os.path.join(OUTPUT_DIR, "metadata.json")
+CORPUS_FILE            = "/root/kallaama/data/corpus.csv"
+REFERENCE_AUDIO_FOLDER = "/root/kallaama/data/references"
+OUTPUT_DIR             = "/root/kallaama/submissions/oolel"
+OUTPUT_AUDIO_DIR       = os.path.join(OUTPUT_DIR, "audio")
+OUTPUT_METADATA        = os.path.join(OUTPUT_DIR, "metadata.json")
 
 MODEL_REPO = "soynade-research/Oolel-Voices"
 
@@ -79,19 +79,24 @@ if __name__ == "__main__":
 
     # Warm up the model
     for _ in range(3):
+        reference_audio_file = os.path.join(REFERENCE_AUDIO_FOLDER, "reference_afy.wav")
         _ = generate_audio(verbalizer.verbalize("This is a warm-up sentence."),
-                           model, REFERENCE_AUDIO_FILE)
+                           model, reference_audio_file)
     print("Model warm-up complete.")
 
     # Generate audio and compute RTF
     rtf_values = []
     for _, row in tqdm(corpus.iterrows(), total=len(corpus), desc="Generating audio"):
         sentence = row["transcription"].strip()
+        speaker = row["speaker"].strip()
+
+        reference_audio_file = os.path.join(REFERENCE_AUDIO_FOLDER, f"reference_{speaker}.wav")
+
         if not sentence:
             continue
 
         start_time     = time.time()
-        wav            = generate_audio(verbalizer.verbalize(sentence), model, REFERENCE_AUDIO_FILE)
+        wav            = generate_audio(verbalizer.verbalize(sentence), model, reference_audio_file)
         waveform       = wav if wav.dim() == 2 else wav.unsqueeze(0)
         inference_time = time.time() - start_time
         audio_duration = waveform.shape[1] / output_sampling_rate

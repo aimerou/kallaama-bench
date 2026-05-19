@@ -3,18 +3,26 @@ KallaamaBench — Official Evaluation Script
 ==========================================
 Metrics: UTMOS · WER · SNR · RTF · Speaker Similarity · F0 Correlation
 
+Requirements
+------------
+pip install omnilingual_asr==0.2.0
+
 Usage
 -----
+python evaluate.py precompute \
+    --audio-folder data/audio/ \
+    --corpus       data/corpus.csv \
+    --output-npz   data/groundtruth.npz
+
 python evaluate.py evaluate \
-    --submission path/to/submission/ \
-    --references data/references.npz \
+    --submission submissions/adia/ \
+    --groundtruth data/groundtruth.npz \
     --corpus     data/corpus.csv \
-    --rtf-json   data/rtf_scores.json \
-    --output     results.json
+    --output     submissions/adia/results.json
 
 The script expects the submission folder to follow the layout described in
 SUBMISSION_FORMAT.md.  It scores submitted audio against:
-  - data/references.npz  : precomputed speaker embeddings + F0 statistics
+  - data/groundtruth.npz  : precomputed speaker embeddings + F0 statistics
                            (one entry per corpus row, ordered identically)
   - data/corpus.csv      : pipe-separated CSV with columns:
                              filename | transcription | speaker | gender
@@ -85,7 +93,7 @@ def load_corpus(corpus_csv: str) -> pd.DataFrame:
     """
     Load a pipe-separated CSV with columns: filename, transcription, speaker, gender.
 
-    Rows are returned in file order; the ordering must match references.npz.
+    Rows are returned in file order; the ordering must match groundtruth.npz.
     """
     df = pd.read_csv(
         corpus_csv,
@@ -109,9 +117,9 @@ def load_corpus(corpus_csv: str) -> pd.DataFrame:
 # Reference data helpers
 # ---------------------------------------------------------------------------
 
-def load_references(references_npz: str) -> dict:
+def load_groundtruth(groundtruth_npz: str) -> dict:
     """
-    Load the precomputed reference vectors from references.npz.
+    Load the precomputed reference vectors from groundtruth.npz.
 
     Expected keys
     -------------
@@ -122,7 +130,7 @@ def load_references(references_npz: str) -> dict:
     f0_hists           : float32 array of shape (N, 50)
     f0_edges           : float32 array of shape (N, 51)
     """
-    data = np.load(references_npz)
+    data = np.load(groundtruth_npz)
     return {
         "speaker_embeddings": data["speaker_embeddings"],
         "f0_means"          : data["f0_means"],
@@ -219,7 +227,7 @@ def compute_speaker_similarity(audio: np.ndarray, sr: int,
                                 ref_embedding: np.ndarray, models: dict) -> float:
     """
     Cosine similarity between the submitted sample's speaker embedding and the
-    reference embedding loaded from references.npz.
+    reference embedding loaded from groundtruth.npz.
 
     Returns a value in [-1, 1]; higher is more similar.
     """
@@ -251,7 +259,7 @@ def extract_f0(audio: np.ndarray, sr: int) -> np.ndarray:
 def compute_f0_correlation(audio: np.ndarray, sr: int, ref_f0_stats: dict) -> float:
     """
     Pearson correlation between the submitted sample's F0 histogram and the
-    reference F0 histogram stored in references.npz.
+    reference F0 histogram stored in groundtruth.npz.
 
     Returns a value in [-1, 1].
     """
@@ -280,7 +288,7 @@ def compute_utmos(audio_path: str, models: dict) -> float:
 # Precompute reference vectors (utility — run once by benchmark organisers)
 # ---------------------------------------------------------------------------
 
-def precompute_references(audio_folder: str, corpus_csv: str,
+def precompute_groundtruth(audio_folder: str, corpus_csv: str,
                            output_npz: str,
                            spkr_model_name: str = SPKR_MODEL_NAME):
     """
@@ -289,15 +297,8 @@ def precompute_references(audio_folder: str, corpus_csv: str,
     call this function.
 
     The audio files must be sorted in the same order as the corpus CSV rows.
-
-    Usage
-    -----
-        python evaluate.py precompute \
-            --audio-folder data/reference_audio/ \
-            --corpus       data/corpus.csv \
-            --output-npz   data/references.npz
     """
-    print("[KallaamaBench] Precomputing reference vectors ...")
+    print("[KallaamaBench] Precomputing groundtruth vectors ...")
 
     spkr_encoder = EncoderClassifier.from_hparams(
         source=spkr_model_name, run_opts={"device": str(DEVICE)}
@@ -354,9 +355,8 @@ def precompute_references(audio_folder: str, corpus_csv: str,
 # Main evaluation loop
 # ---------------------------------------------------------------------------
 
-def evaluate(submission_dir: str, references_npz: str, corpus_csv: str,
-             rtf_json: str, output_json: str,
-             asr_model_card: str = ASR_MODEL_CARD,
+def evaluate(submission_dir: str, groundtruth_npz: str, corpus_csv: str,
+             output_json: str, asr_model_card: str = ASR_MODEL_CARD,
              language_code: str  = LANGUAGE_CODE):
 
     # -- Load metadata
@@ -377,18 +377,13 @@ def evaluate(submission_dir: str, references_npz: str, corpus_csv: str,
         for idx, row in corpus_df.iterrows()
     }
 
-    # -- Load references
-    refs = load_references(references_npz)
+    # -- Load groundtruth vectors (speaker embeddings + F0 stats)
+    groundtruth = load_groundtruth(groundtruth_npz)
 
-    # -- Load RTF (from submission metadata or external JSON)
+    # -- Load RTF (from submission metadata)
     rtf = meta.get("rtf", None)
-    if rtf is None and rtf_json and os.path.exists(rtf_json):
-        with open(rtf_json) as f:
-            rtf_data = json.load(f)
-        for item in rtf_data:
-            if item.get("model_name") == model_name:
-                rtf = item["rtf"]
-                break
+    if rtf is None:
+        rtf = 0.0
 
     # -- Discover submitted audio files
     audio_dir   = os.path.join(submission_dir, "audio")
@@ -423,16 +418,16 @@ def evaluate(submission_dir: str, references_npz: str, corpus_csv: str,
         snr   = compute_snr(audio, models)
         spk   = compute_speaker_similarity(
             audio, sr,
-            ref_embedding=refs["speaker_embeddings"][row_idx],
+            ref_embedding=groundtruth["speaker_embeddings"][row_idx],
             models=models,
         )
         f0c = compute_f0_correlation(
             audio, sr,
             ref_f0_stats={
-                "mean" : refs["f0_means"][row_idx],
-                "std"  : refs["f0_stds"][row_idx],
-                "hist" : refs["f0_hists"][row_idx],
-                "edges": refs["f0_edges"][row_idx],
+                "mean" : groundtruth["f0_means"][row_idx],
+                "std"  : groundtruth["f0_stds"][row_idx],
+                "hist" : groundtruth["f0_hists"][row_idx],
+                "edges": groundtruth["f0_edges"][row_idx],
             },
         )
 
@@ -496,13 +491,11 @@ def parse_args():
     ev = sub.add_parser("evaluate", help="Score a participant submission")
     ev.add_argument("--submission",    required=True,
                     help="Path to submission folder")
-    ev.add_argument("--references",    required=True,
-                    help="Path to references.npz")
+    ev.add_argument("--groundtruth",    required=True,
+                    help="Path to groundtruth.npz")
     ev.add_argument("--corpus",        required=True,
                     help="Path to pipe-separated CSV corpus "
                          "(columns: filename|transcription|speaker|gender)")
-    ev.add_argument("--rtf-json",      default=None,
-                    help="Optional external RTF JSON")
     ev.add_argument("--output",        default="results.json",
                     help="Output JSON path")
     ev.add_argument("--asr-model",     default=ASR_MODEL_CARD,
@@ -516,7 +509,7 @@ def parse_args():
                     help="Folder of reference audio WAV files")
     pc.add_argument("--corpus",       required=True,
                     help="Path to pipe-separated CSV corpus")
-    pc.add_argument("--output-npz",   default="data/references.npz",
+    pc.add_argument("--output-npz",   default="data/groundtruth.npz",
                     help="Output .npz path")
 
     return p.parse_args()
@@ -528,15 +521,14 @@ if __name__ == "__main__":
     if args.command == "evaluate":
         evaluate(
             submission_dir = args.submission,
-            references_npz = args.references,
+            groundtruth_npz = args.groundtruth,
             corpus_csv     = args.corpus,
-            rtf_json       = args.rtf_json,
             output_json    = args.output,
             asr_model_card = args.asr_model,
             language_code  = args.language_code,
         )
     elif args.command == "precompute":
-        precompute_references(
+        precompute_groundtruth(
             audio_folder = args.audio_folder,
             corpus_csv   = args.corpus,
             output_npz   = args.output_npz,

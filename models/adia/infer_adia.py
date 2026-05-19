@@ -44,7 +44,9 @@ METADATA = {
 }
 
 # Description used to guide the voice style
-VOICE_DESCRIPTION = "A clear and educational voice, with a flow adapted to learning"
+DEFAULT_VOICE_DESCRIPTION = "A clear and educational voice, with a flow adapted to learning"
+MALE_VOICE_DESCRIPTION = "A clear and educational male voice, with a flow adapted to learning"
+FEMALE_VOICE_DESCRIPTION = "A clear and educational female voice, with a flow adapted to learning"
 
 GENERATION_CONFIG = dict(
     temperature=0.8,
@@ -85,18 +87,25 @@ if __name__ == "__main__":
     # Warm up the model
     for _ in range(3):
         _ = generate_audio(verbalizer.verbalize("This is a warm-up sentence."),
-                           model, tokenizer, VOICE_DESCRIPTION)
+                           model, tokenizer, DEFAULT_VOICE_DESCRIPTION)
     print("Model warm-up complete.")
 
     # Generate audio and compute RTF
     rtf_values = []
     for _, row in tqdm(corpus.iterrows(), total=len(corpus), desc="Generating audio"):
         sentence = row["transcription"].strip()
+        speaker = row["speaker"].strip()
+        gender = int(row["gender"])
+
+        if gender == 1: voice_description = MALE_VOICE_DESCRIPTION
+        elif gender == 0: voice_description = FEMALE_VOICE_DESCRIPTION
+        else: voice_description = DEFAULT_VOICE_DESCRIPTION
+
         if not sentence:
             continue
 
         start_time     = time.time()
-        audio          = generate_audio(verbalizer.verbalize(sentence), model, tokenizer, VOICE_DESCRIPTION)
+        audio          = generate_audio(verbalizer.verbalize(sentence), model, tokenizer, voice_description)
         waveform       = audio.unsqueeze(0)
         inference_time = time.time() - start_time
         audio_duration = waveform.shape[1] / model.config.sampling_rate
