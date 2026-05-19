@@ -106,6 +106,12 @@ python evaluate.py evaluate \
 Zip your submission and open a **New Submission** issue in this repository.
 See [SUBMISSION_FORMAT.md](SUBMISSION_FORMAT.md) for details.
 
+Install Git LFS (Linux)
+```bash
+curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash
+sudo apt-get install git-lfs
+```
+
 ---
 
 ## Data policy
