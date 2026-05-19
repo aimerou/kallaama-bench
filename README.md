@@ -112,6 +112,14 @@ curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.s
 sudo apt-get install git-lfs
 ```
 
+Add zip and npz file with Git LFS
+```bash
+git lfs track "*.zip"
+git lfs track "*.npz"
+git add path/to/file.zip
+git add path/to/file.npz
+```
+
 ---
 
 ## Data policy
