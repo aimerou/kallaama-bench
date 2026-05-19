@@ -5,6 +5,3 @@
 *__pycache__/
 *unsloth_compiled_cache/
 data/audio/
-# data/groundtruth.npz
-# dev/groundtruth_dev.npz
-# submissions/
