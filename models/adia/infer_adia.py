@@ -80,15 +80,10 @@ if __name__ == "__main__":
     model     = ParlerTTSForConditionalGeneration.from_pretrained(MODEL_REPO).to(DEVICE)
     tokenizer = AutoTokenizer.from_pretrained(MODEL_REPO)
     print("Model loaded successfully!")
+    print(f"Model sampling rate: {model.config.sampling_rate}")
 
     # Initialize verbalizer
     verbalizer = WolofTTSVerbalizer()
-
-    # Warm up the model
-    for _ in range(3):
-        _ = generate_audio(verbalizer.verbalize("This is a warm-up sentence."),
-                           model, tokenizer, DEFAULT_VOICE_DESCRIPTION)
-    print("Model warm-up complete.")
 
     # Generate audio and compute RTF
     rtf_values = []

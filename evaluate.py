@@ -15,10 +15,10 @@ python evaluate.py precompute \
     --output-npz   data/groundtruth.npz
 
 python evaluate.py evaluate \
-    --submission submissions/adia/ \
+    --submission submissions/oolel/ \
     --groundtruth data/groundtruth.npz \
     --corpus     data/corpus.csv \
-    --output     submissions/adia/results.json
+    --output     results/results_oolel.json
 
 The script expects the submission folder to follow the layout described in
 SUBMISSION_FORMAT.md.  It scores submitted audio against:
@@ -199,11 +199,10 @@ def transcribe_chunked(audio_array: np.ndarray, asr_pipeline,
     return " ".join(hypotheses)
 
 
-def compute_wer(audio: np.ndarray, sr: int, reference: str,
+def compute_wer(audio: np.ndarray, reference: str,
                 models: dict, language_code: str) -> float:
     """ASR-based Word Error Rate using Omnilingual ASR."""
-    audio_16k  = librosa.resample(audio, orig_sr=sr, target_sr=TARGET_SR)
-    hypothesis = transcribe_chunked(audio_16k, models["asr_pipeline"], language_code)
+    hypothesis = transcribe_chunked(audio, models["asr_pipeline"], language_code)
     return wer(reference, hypothesis)
 
 
@@ -220,19 +219,17 @@ def compute_snr(audio: np.ndarray, models: dict) -> float:
     with torch.no_grad():
         result         = models["denoiser"].separate_batch(t)
         noise_estimate = result.permute(0, 2, 1)[0][0]
-    return _snr_power(audio, noise_estimate.cpu().numpy())
+    return _snr_power(t.cpu().numpy(), noise_estimate.cpu().numpy())
 
 
-def compute_speaker_similarity(audio: np.ndarray, sr: int,
-                                ref_embedding: np.ndarray, models: dict) -> float:
+def compute_speaker_similarity(audio: np.ndarray, ref_embedding: np.ndarray, models: dict) -> float:
     """
     Cosine similarity between the submitted sample's speaker embedding and the
     reference embedding loaded from groundtruth.npz.
 
     Returns a value in [-1, 1]; higher is more similar.
     """
-    audio_16k = librosa.resample(audio, orig_sr=sr, target_sr=TARGET_SR)
-    t         = torch.tensor(audio_16k).unsqueeze(0).float().to(DEVICE)
+    t         = torch.tensor(audio).unsqueeze(0).float().to(DEVICE)
     with torch.no_grad():
         emb = models["spkr_encoder"].encode_batch(t).squeeze().cpu().numpy()
 
@@ -412,17 +409,19 @@ def evaluate(submission_dir: str, groundtruth_npz: str, corpus_csv: str,
 
         path      = os.path.join(audio_dir, fn)
         audio, sr = librosa.load(path, sr=None)
+        audio_16k = librosa.resample(audio, orig_sr=sr, target_sr=TARGET_SR)
+        print(f"Original SR: {sr} Hz, Resampled SR: {TARGET_SR} Hz, Duration: {len(audio_16k)/TARGET_SR:.2f} s")
 
         utmos = compute_utmos(path, models)
-        wer_  = compute_wer(audio, sr, reference, models, language_code)
-        snr   = compute_snr(audio, models)
+        wer_  = compute_wer(audio_16k, reference, models, language_code)
+        snr   = compute_snr(audio_16k, models)
         spk   = compute_speaker_similarity(
-            audio, sr,
+            audio_16k,
             ref_embedding=groundtruth["speaker_embeddings"][row_idx],
             models=models,
         )
         f0c = compute_f0_correlation(
-            audio, sr,
+            audio_16k, TARGET_SR,
             ref_f0_stats={
                 "mean" : groundtruth["f0_means"][row_idx],
                 "std"  : groundtruth["f0_stds"][row_idx],

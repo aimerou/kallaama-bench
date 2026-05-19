@@ -73,16 +73,10 @@ if __name__ == "__main__":
     model.to(DEVICE)
     output_sampling_rate = model.sr
     print("Model loaded successfully!")
+    print(f"Model sampling rate: {output_sampling_rate}")
 
     # Initialize verbalizer
     verbalizer = WolofTTSVerbalizer()
-
-    # Warm up the model
-    for _ in range(3):
-        reference_audio_file = os.path.join(REFERENCE_AUDIO_FOLDER, "reference_afy.wav")
-        _ = generate_audio(verbalizer.verbalize("This is a warm-up sentence."),
-                           model, reference_audio_file)
-    print("Model warm-up complete.")
 
     # Generate audio and compute RTF
     rtf_values = []
