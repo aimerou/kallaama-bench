@@ -38,6 +38,7 @@ AUDIO_FIELD   = "audio"
 TEXT_FIELD    = "transcription"
 SPEAKER_FIELD = "speaker"
 GENDER_FIELD  = "gender"
+GENDER_MAP    = {"female": 0, "male": 1}
 
 
 def load_splits(dataset_name, splits, hf_token):
@@ -109,7 +110,7 @@ def download_tts_dataset(dataset_name, dest_folder, splits, max_samples=None):
                 "filename":      filename,
                 "transcription": str(sample[TEXT_FIELD]),
                 "speaker":       str(sample[SPEAKER_FIELD]) if has_speaker else "",
-                "gender":        str(sample[GENDER_FIELD])  if has_gender  else "",
+                "gender":        GENDER_MAP.get(str(sample[GENDER_FIELD]), "") if has_gender else "",
             })
 
     print(f"\n✓ Done! Splits processed : {splits}")
