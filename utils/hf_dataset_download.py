@@ -110,7 +110,7 @@ def download_tts_dataset(dataset_name, dest_folder, splits, max_samples=None):
                 "filename":      filename,
                 "transcription": str(sample[TEXT_FIELD]),
                 "speaker":       str(sample[SPEAKER_FIELD]) if has_speaker else "",
-                "gender":        GENDER_MAP.get(str(sample[GENDER_FIELD]), "") if has_gender else "",
+                "gender":        GENDER_MAP[str(sample[GENDER_FIELD])] if has_gender else "",
             })
 
     print(f"\n✓ Done! Splits processed : {splits}")
