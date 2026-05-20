@@ -1,7 +1,8 @@
 """
 hf_dataset_download.py
 -----------------------
-Download a TTS dataset from Hugging Face and save audio files + metadata
+Download a TTS dataset from Hugging Face and save audio files + metadata.
+Supports a single split or multiple splits (which get merged into one dataset).
 
 Requirements
 ------------
@@ -10,95 +11,141 @@ export HF_TOKEN=your_huggingface_token
 
 Example Usage
 -------------
-python3 hf_dataset_download.py
+# Single split
+python3 hf_dataset_download.py --splits train
+
+# Multiple splits (merged)
+python3 hf_dataset_download.py --splits train test
+
+# With optional args
+python3 hf_dataset_download.py --dataset aimerou/kallaama-bench-filtered --splits train test --dest /root/kallaama/data/ --max-samples 100
 """
 
 import os
 import csv
-from datasets import load_dataset
+import argparse
+from datasets import load_dataset, concatenate_datasets
 from tqdm import tqdm
 import soundfile as sf
 
-HF_TOKEN = os.getenv("HF_TOKEN")
-DATASET_NAME = "aimerou/kallaama-bench-filtered"
-DEST_FOLDER = "/root/kallaama/data/"
-SPLIT = "test"
+# Defaults (can be overridden via CLI args)
+DEFAULT_DATASET = "aimerou/kallaama-bench-filtered"
+DEFAULT_DEST    = "/root/kallaama/data/"
+DEFAULT_SPLITS  = ["train", "test"]
 
-def download_tts_dataset(dataset_name, dest_folder, split="train", max_samples=None):
+# Dataset field names
+AUDIO_FIELD   = "audio"
+TEXT_FIELD    = "transcription"
+SPEAKER_FIELD = "speaker"
+GENDER_FIELD  = "gender"
+
+
+def load_splits(dataset_name, splits, hf_token):
+    """Load one or more splits and return a single merged dataset."""
+    loaded = []
+    for split in splits:
+        print(f"Loading '{split}' split...")
+        ds = load_dataset(dataset_name, split=split, token=hf_token)
+        print(f"  → {len(ds)} samples")
+        loaded.append(ds)
+
+    if len(loaded) == 1:
+        return loaded[0]
+
+    print(f"\nMerging {len(splits)} splits: {splits}...")
+    merged = concatenate_datasets(loaded)
+    print(f"Total samples after merge: {len(merged)}")
+    return merged
+
+
+def download_tts_dataset(dataset_name, dest_folder, splits, max_samples=None):
     """
-    Download a TTS dataset from Hugging Face and save audio files + metadata
+    Download a TTS dataset from Hugging Face and save audio files + metadata.
+
+    Args:
+        dataset_name: HF dataset identifier (e.g. "org/dataset-name")
+        dest_folder:  Root output directory
+        splits:       List of split names to load (e.g. ["train"] or ["train", "test"])
+        max_samples:  Optional cap on the number of samples to process
     """
-    
-    # Create destination folders
+    hf_token = os.getenv("HF_TOKEN")
+
+    # Build a descriptive output subfolder: "train", "test", or "train+test"
+    split_tag   = "+".join(splits)
+    dest_folder = os.path.join(dest_folder, split_tag)
     audio_folder = os.path.join(dest_folder, "wavs")
     os.makedirs(audio_folder, exist_ok=True)
-    
-    # Dataset fields
-    audio_field = "audio"
-    text_field = "transcription"
-    speaker_field = "speaker"
-    gender_field = "gender"
-    
-    print(f"Loading dataset: {dataset_name} - {split} split...")
-    
-    # Load the dataset with the specified subset
-    dataset = load_dataset(dataset_name, split=split, token=HF_TOKEN)
-    
-    # Limit samples if specified
+
+    dataset = load_splits(dataset_name, splits, hf_token)
+
     if max_samples:
         dataset = dataset.select(range(min(max_samples, len(dataset))))
-    
-    print(f"Total samples to download: {len(dataset)}")
-    print(f"Dataset features: {dataset.features}")
-    
-    # Prepare metadata CSV
-    csv_path = os.path.join(dest_folder, "metadata.csv")
-    
-    # Check which optional fields are available
+        print(f"Capped to {len(dataset)} samples")
+
+    print(f"\nDataset features: {dataset.features}")
+
     available_fields = dataset.features.keys()
-    has_speaker = speaker_field in available_fields
-    has_gender = gender_field in available_fields
-    
-    # Prepare CSV header
-    csv_headers = ["filename", "transcription", "speaker", "gender"]
-    
-    # Process and save dataset
-    with open(csv_path, 'w', newline='', encoding='utf-8') as csvfile:
-        writer = csv.DictWriter(csvfile, fieldnames=csv_headers, delimiter='|')
+    has_speaker = SPEAKER_FIELD in available_fields
+    has_gender  = GENDER_FIELD  in available_fields
+
+    csv_path = os.path.join(dest_folder, "metadata.csv")
+    with open(csv_path, "w", newline="", encoding="utf-8") as csvfile:
+        writer = csv.DictWriter(
+            csvfile,
+            fieldnames=["filename", "transcription", "speaker", "gender"],
+            delimiter="|"
+        )
         writer.writeheader()
-        
-        for idx, sample in enumerate(tqdm(dataset, desc="Downloading audio files")):
-            # Generate filename
-            filename = f"audio_{idx:05d}.wav"
-            audio_path = os.path.join(audio_folder, filename)
-            
-            # Extract audio data
-            audio_data = sample[audio_field]
-            audio_array = audio_data["array"]
-            sampling_rate = audio_data["sampling_rate"]
-            
-            # Save audio file
-            sf.write(str(audio_path), audio_array, sampling_rate)
-            
-            # Prepare metadata row
-            row = {
-                "filename": filename,
-                "transcription": str(sample[text_field]),
-                "speaker": str(sample[speaker_field]) if has_speaker else "",
-                "gender": str(sample[gender_field]) if has_gender else "",
-            }
-            
-            writer.writerow(row)
-    
-    print(f"\n✓ Download complete!")
-    print(f"✓ Audio files saved to: {audio_folder}")
-    print(f"✓ Metadata saved to: {csv_path}")
-    print(f"✓ Total files: {len(dataset)}")
+
+        for idx, sample in enumerate(tqdm(dataset, desc="Saving audio files")):
+            filename   = f"audio_{idx:05d}.wav"
+            audio_data = sample[AUDIO_FIELD]
+            sf.write(
+                os.path.join(audio_folder, filename),
+                audio_data["array"],
+                audio_data["sampling_rate"],
+            )
+            writer.writerow({
+                "filename":      filename,
+                "transcription": str(sample[TEXT_FIELD]),
+                "speaker":       str(sample[SPEAKER_FIELD]) if has_speaker else "",
+                "gender":        str(sample[GENDER_FIELD])  if has_gender  else "",
+            })
+
+    print(f"\n✓ Done! Splits processed : {splits}")
+    print(f"✓ Audio files : {audio_folder}")
+    print(f"✓ Metadata    : {csv_path}")
+    print(f"✓ Total files : {len(dataset)}")
+
+
+def parse_args():
+    parser = argparse.ArgumentParser(
+        description="Download a HuggingFace TTS dataset (one or more splits)."
+    )
+    parser.add_argument(
+        "--dataset", default=DEFAULT_DATASET,
+        help="HuggingFace dataset identifier (default: %(default)s)"
+    )
+    parser.add_argument(
+        "--dest", default=DEFAULT_DEST,
+        help="Root output directory (default: %(default)s)"
+    )
+    parser.add_argument(
+        "--splits", nargs="+", default=DEFAULT_SPLITS,
+        help="One or more split names, e.g. --splits train test (default: %(default)s)"
+    )
+    parser.add_argument(
+        "--max-samples", type=int, default=None,
+        help="Cap the number of samples to process (default: no limit)"
+    )
+    return parser.parse_args()
 
 
 if __name__ == "__main__":
+    args = parse_args()
     download_tts_dataset(
-        dataset_name=DATASET_NAME,
-        dest_folder=DEST_FOLDER,
-        split=SPLIT
+        dataset_name=args.dataset,
+        dest_folder=args.dest,
+        splits=args.splits,
+        max_samples=args.max_samples,
     )

@@ -9,11 +9,6 @@ pip install omnilingual_asr==0.2.0
 
 Usage
 -----
-python evaluate.py precompute \
-    --audio-folder data/audio/ \
-    --corpus       data/corpus.csv \
-    --output-npz   data/groundtruth.npz
-
 python evaluate.py evaluate \
     --submission submissions/oolel/ \
     --groundtruth data/groundtruth.npz \

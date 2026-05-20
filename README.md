@@ -5,7 +5,7 @@
 > *Kallaama* — "language" in Wolof
 
 KallaamaBench provides a standardised evaluation protocol for Wolof TTS systems.
-Participants synthesise audio from 1502 text prompts; the evaluation script
+Participants synthesise audio from 1602 text prompts; the evaluation script
 scores submissions against hidden reference data.
 
 ---
@@ -44,7 +44,7 @@ kallaamabench/
 ├── README.md
 │
 ├── data/
-│   ├── corpus.csv           # 1502 Wolof sentences (filename|transcription|speaker|gender)
+│   ├── corpus.csv           # 1602 Wolof sentences (filename|transcription|speaker|gender)
 │   ├── groundtruth.npz       # Precomputed speaker embeddings + F0 stats
 │   └── rtf_scores.json
 │
@@ -106,25 +106,32 @@ python evaluate.py evaluate \
 Zip your submission and open a **New Submission** issue in this repository.
 See [SUBMISSION_FORMAT.md](SUBMISSION_FORMAT.md) for details.
 
+---
+
+## Admin
+Precompute groundtruth speaker and F0 stats
+```bash
+python evaluate.py precompute \
+    --audio-folder data/audio/ \
+    --corpus       data/corpus.csv \
+    --output-npz   data/groundtruth.npz
+```
+
 Install Git LFS (Linux)
 ```bash
 curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash
 sudo apt-get install git-lfs
 ```
 
-Add zip and npz file with Git LFS
+Add .zip files with Git LFS
 ```bash
 git lfs track "*.zip"
-git lfs track "*.npz"
 git add path/to/file.zip
-git add path/to/file.npz
 ```
-
----
 
 ## Data policy
 
-- The test set audio (1502 recordings) is **never released**.
+- The test set audio (1602 recordings) is **never released**.
 - `data/corpus.csv` and `data/groundtruth.npz` are public.
 - `groundtruth.npz` contains speaker embeddings (192-dim) and F0 histogram statistics only — raw audio cannot be reconstructed.
 
