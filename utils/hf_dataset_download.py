@@ -38,7 +38,7 @@ AUDIO_FIELD   = "audio"
 TEXT_FIELD    = "transcription"
 SPEAKER_FIELD = "speaker"
 GENDER_FIELD  = "gender"
-GENDER_MAP    = {"female": 0, "male": 1}
+GENDER_MAP    = {"0": "female", "1": "male"}
 
 
 def load_splits(dataset_name, splits, hf_token):
