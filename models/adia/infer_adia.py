@@ -90,10 +90,10 @@ if __name__ == "__main__":
     for _, row in tqdm(corpus.iterrows(), total=len(corpus), desc="Generating audio"):
         sentence = row["transcription"].strip()
         speaker = row["speaker"].strip()
-        gender = int(row["gender"])
+        gender = row["gender"].strip()
 
-        if gender == 1: voice_description = MALE_VOICE_DESCRIPTION
-        elif gender == 0: voice_description = FEMALE_VOICE_DESCRIPTION
+        if gender == "male": voice_description = MALE_VOICE_DESCRIPTION
+        elif gender == "female": voice_description = FEMALE_VOICE_DESCRIPTION
         else: voice_description = DEFAULT_VOICE_DESCRIPTION
 
         if not sentence:

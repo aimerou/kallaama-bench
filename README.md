@@ -10,13 +10,21 @@ scores submissions against hidden reference data.
 
 ---
 
-## Leaderboard
+## TTS Leaderboard
 
 *Last updated: 2026-05-12*
 
-| Rank | Team | System | UTMOS ↑ | WER ↓ | SNR ↑ (dB) | SpkSim ↑ | F0Corr ↑ | RTF ↓ | Human MOS ↑ | Date |
-|:---:|---|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|---|
-| — | *Baseline* | *VITS (10 h Wolof)* | *3.21* | *0.38* | *18.4* | *0.71* | *0.62* | *0.09* | *3.1 ± 0.5* | 2026-01-15 |
+| Rank | Team | System | Human MOS ↑ | TTS Score ↑ | UTMOS ↑ | WER ↓ | SNR ↑ (dB) | RTF ↓ | Date |
+|:---:|---|---|:---:|:---:|:---:|:---:|:---:|:---:|---|
+| — | *Baseline* | *VITS (10 h Wolof)* | *3.1 ± 0.5* | *3.12* | *3.21* | *0.38* | *18.4* | *0.09* | 2026-01-15 |
+
+## Voice Cloning Leaderboard
+
+*Last updated: 2026-05-12*
+
+| Rank | Team | System | VC Score ↑ | SpkSim ↑ | F0Corr ↑ | Date |
+|:---:|---|---|:---:|:---:|:---:||---|
+| — | *Baseline* | *VITS (10 h Wolof)* | *3.21* | *0.71* | *0.62* | 2026-01-15 |
 
 ---
 
@@ -107,27 +115,6 @@ Zip your submission and open a **New Submission** issue in this repository.
 See [SUBMISSION_FORMAT.md](SUBMISSION_FORMAT.md) for details.
 
 ---
-
-## Admin
-Precompute groundtruth speaker and F0 stats
-```bash
-python evaluate.py precompute \
-    --audio-folder data/audio/ \
-    --corpus       data/corpus.csv \
-    --output-npz   data/groundtruth.npz
-```
-
-Install Git LFS (Linux)
-```bash
-curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash
-sudo apt-get install git-lfs
-```
-
-Add .zip files with Git LFS
-```bash
-git lfs track "*.zip"
-git add path/to/file.zip
-```
 
 ## Data policy
 
