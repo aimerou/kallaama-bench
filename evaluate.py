@@ -15,10 +15,10 @@ python evaluate.py precompute \
     --output-npz   data/groundtruth.npz
 
 python evaluate.py evaluate \
-    --submission submissions/oolel/ \
+    --submission submissions/mira/ \
     --groundtruth data/groundtruth.npz \
     --corpus     data/corpus.csv \
-    --output     results/oolel/results_oolel.json
+    --output     results/mira/results_mira.json
 
 Note: data/references/ contains per-speaker WAV files used by TTS models
 as conditioning audio during synthesis; they are NOT used by this script.

@@ -1,3 +1,16 @@
+"""
+Requirements
+------------
+pip install -r requirements.txt
+pip install git+https://github.com/ysharma3501/FastBiCodec.git git+https://github.com/ysharma3501/FlashSR.git
+pip install "torch==2.8.0" "torchaudio==2.8.0" "torchvision==0.23.0" --index-url https://download.pytorch.org/whl/cu128 --no-cache-dir
+pip install git+https://github.com/ysharma3501/MiraTTS.git
+
+Usage
+-----
+python infer_mira.py
+"""
+
 import os
 import json
 import time
@@ -15,7 +28,7 @@ DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
 CORPUS_FILE          = "/root/kallaama/data/corpus.csv"
 REFERENCE_AUDIO_FOLDER = "/root/kallaama/data/references"
-OUTPUT_DIR           = "/root/kallaama/outputs/mira-tts"
+OUTPUT_DIR           = "/root/kallaama/submissions/mira"
 OUTPUT_AUDIO_DIR     = os.path.join(OUTPUT_DIR, "audio")
 OUTPUT_METADATA      = os.path.join(OUTPUT_DIR, "metadata.json")
 
