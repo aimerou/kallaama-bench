@@ -21,6 +21,7 @@ from unsloth import FastModel
 from huggingface_hub import login
 from tqdm import tqdm
 from ncodec.codec import TTSCodec
+from lmdeploy import pipeline, GenerationConfig, PytorchEngineConfig
 from verbalizer import WolofTTSVerbalizer
 
 TOKEN = os.getenv("HF_TOKEN")
@@ -60,7 +61,6 @@ if __name__ == "__main__":
     print(f"Loaded {len(corpus)} sentences from corpus.")
 
     # Initialize inference pipeline
-    from lmdeploy import pipeline, GenerationConfig, PytorchEngineConfig
     backend_config    = PytorchEngineConfig()
     generation_config = GenerationConfig(top_p=0.95, top_k=50, temperature=0.8,
                                           max_new_tokens=1024, repetition_penalty=1.2,
