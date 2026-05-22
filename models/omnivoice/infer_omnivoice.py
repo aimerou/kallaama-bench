@@ -16,6 +16,9 @@ import time
 import torch
 import torchaudio
 import pandas as pd
+from tqdm import tqdm
+import soundfile as sf
+from huggingface_hub import login
 from omnivoice import OmniVoice
 from verbalizer import WolofTTSVerbalizer
 
@@ -23,8 +26,8 @@ TOKEN = os.getenv("HF_TOKEN")
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
 CORPUS_FILE          = "/root/kallaama/data/corpus.csv"
-REFERENCE_AUDIO_FOLDER = "/root/kallaama/data/references"
-OUTPUT_DIR           = "/root/kallaama/submissions/omnivoice"
+REFERENCE_AUDIO_FOLDER = "/root/kallaama/data/references/"
+OUTPUT_DIR           = "/root/kallaama/submissions/omnivoice/"
 OUTPUT_AUDIO_DIR     = os.path.join(OUTPUT_DIR, "audio")
 OUTPUT_METADATA      = os.path.join(OUTPUT_DIR, "metadata.json")
 
@@ -50,6 +53,11 @@ if __name__ == "__main__":
     corpus = corpus.dropna(subset=["filename", "transcription"]).reset_index(drop=True)
     print(f"Loaded {len(corpus)} sentences from corpus.")
 
+    # Load reference audio transcriptions fron JSON file
+    reference_transcriptions_file = os.path.join(REFERENCE_AUDIO_FOLDER, "transcriptions.json")
+    with open(reference_transcriptions_file, "r") as f:
+        reference_transcriptions = json.load(f)
+
     # Initialize model
     model = OmniVoice.from_pretrained(
         MODEL_REPO,
@@ -72,18 +80,19 @@ if __name__ == "__main__":
         start_time      = time.time()
 
         sentence        = verbalizer.verbalize(sentence)
-        reference_audio_file = os.path.join(REFERENCE_AUDIO_FOLDER, f"reference_{speaker}.wav")
+        reference_audio_file = os.path.join(REFERENCE_AUDIO_FOLDER, "audio", f"reference_{speaker}.wav")
+        reference_transcription = next((item for item in reference_transcriptions if item["speaker"] == speaker), None)["transcription"]
         audio = model.generate(
             text=sentence,
             ref_audio=reference_audio_file,
-            ref_text="Transcription of the reference audio.",
+            ref_text=reference_transcription,
         )
         inference_time  = time.time() - start_time
         audio_duration  = len(audio[0]) / OUTPUT_SAMPLING_RATE
         rtf             = inference_time / audio_duration if audio_duration > 0 else float("inf")
         rtf_values.append(rtf)
 
-        torchaudio.save(os.path.join(OUTPUT_AUDIO_DIR, row["filename"]), audio[0], OUTPUT_SAMPLING_RATE)
+        sf.write(os.path.join(OUTPUT_AUDIO_DIR, row["filename"]), audio[0], OUTPUT_SAMPLING_RATE)
 
     avg_rtf = sum(rtf_values) / len(rtf_values) if rtf_values else 0.0
     print(f"Audio files saved to: {OUTPUT_AUDIO_DIR}")
