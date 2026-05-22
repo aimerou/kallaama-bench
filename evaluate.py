@@ -15,10 +15,10 @@ python evaluate.py precompute \
     --output-npz   data/groundtruth.npz
 
 python evaluate.py evaluate \
-    --submission submissions/adia/ \
+    --submission submissions/oolel/ \
     --groundtruth data/groundtruth.npz \
     --corpus     data/corpus.csv \
-    --output     results/adia/results_adia.json
+    --output     results/oolel/results_oolel.json
 
 Note: data/references/ contains per-speaker WAV files used by TTS models
 as conditioning audio during synthesis; they are NOT used by this script.
@@ -76,149 +76,6 @@ def iter_chunks(audio_array: np.ndarray, chunk_duration_s: int, sample_rate: int
         if len(chunk) < min_samples:
             break
         yield start, chunk
-
-
-# ---------------------------------------------------------------------------
-# Checkpoint helpers  (one JSONL line per completed sample)
-# ---------------------------------------------------------------------------
-
-def _checkpoint_path(output_json: str) -> str:
-    """Return the .jsonl checkpoint file path derived from the output JSON path."""
-    base, _ = os.path.splitext(output_json)
-    return base + ".checkpoint.jsonl"
-
-
-def load_checkpoint(output_json: str) -> dict:
-    """
-    Load previously scored samples from the checkpoint file.
-
-    Returns a dict mapping audio filename stem -> per-sample score dict,
-    so the main loop can skip already-completed files.
-    """
-    path = _checkpoint_path(output_json)
-    completed: dict = {}
-    if not os.path.exists(path):
-        return completed
-    with open(path) as fh:
-        for line in fh:
-            line = line.strip()
-            if not line:
-                continue
-            try:
-                record = json.loads(line)
-                completed[record["stem"]] = record
-            except (json.JSONDecodeError, KeyError):
-                pass  # ignore corrupted lines
-    if completed:
-        print(f"[KallaamaBench] Resuming: {len(completed)} sample(s) already scored "
-              f"(checkpoint: {path})")
-    return completed
-
-
-def append_checkpoint(output_json: str, stem: str, scores: dict) -> None:
-    """Append one completed sample's scores to the checkpoint file (atomic-ish)."""
-    path   = _checkpoint_path(output_json)
-    record = {"stem": stem, **scores}
-    with open(path, "a") as fh:
-        fh.write(json.dumps(record) + "\n")
-        fh.flush()
-        os.fsync(fh.fileno())
-
-
-def delete_checkpoint(output_json: str) -> None:
-    """Remove the checkpoint file after a successful, complete evaluation run."""
-    path = _checkpoint_path(output_json)
-    if os.path.exists(path):
-        os.remove(path)
-        print(f"[KallaamaBench] Checkpoint removed: {path}")
-
-
-# ---------------------------------------------------------------------------
-# Precompute checkpoint helpers
-#
-# Unlike the evaluate checkpoint (which stores scalar scores), the precompute
-# checkpoint must persist numpy arrays (speaker embeddings, F0 histograms …).
-# Each JSONL line stores one file's arrays as base64-encoded raw bytes so that
-# the file remains plain-text and human-inspectable.
-# ---------------------------------------------------------------------------
-
-def _precompute_checkpoint_path(output_npz: str) -> str:
-    base, _ = os.path.splitext(output_npz)
-    return base + ".checkpoint.jsonl"
-
-
-def _ndarray_to_b64(arr: np.ndarray) -> str:
-    """Serialize a numpy array to a base64 string (dtype + shape preserved)."""
-    import base64, io
-    buf = io.BytesIO()
-    np.save(buf, arr)
-    return base64.b64encode(buf.getvalue()).decode("ascii")
-
-
-def _b64_to_ndarray(s: str) -> np.ndarray:
-    """Deserialize a numpy array from a base64 string."""
-    import base64, io
-    return np.load(io.BytesIO(base64.b64decode(s)))
-
-
-def load_precompute_checkpoint(output_npz: str) -> dict:
-    """
-    Return a dict mapping filename stem -> dict of precomputed arrays/scalars
-    for every file already processed in a previous (interrupted) run.
-    """
-    path = _precompute_checkpoint_path(output_npz)
-    completed: dict = {}
-    if not os.path.exists(path):
-        return completed
-    with open(path) as fh:
-        for line in fh:
-            line = line.strip()
-            if not line:
-                continue
-            try:
-                record = json.loads(line)
-                stem   = record["stem"]
-                completed[stem] = {
-                    "spk_emb"  : _b64_to_ndarray(record["spk_emb"]),
-                    "f0_mean"  : record["f0_mean"],
-                    "f0_std"   : record["f0_std"],
-                    "f0_hist"  : _b64_to_ndarray(record["f0_hist"]),
-                    "f0_edges" : _b64_to_ndarray(record["f0_edges"]),
-                }
-            except (json.JSONDecodeError, KeyError, Exception):
-                pass  # skip corrupted lines
-    if completed:
-        print(f"[KallaamaBench] Resuming precompute: {len(completed)} file(s) already "
-              f"processed (checkpoint: {path})")
-    return completed
-
-
-def append_precompute_checkpoint(output_npz: str, stem: str,
-                                  spk_emb: np.ndarray, f0_mean: float,
-                                  f0_std: float, f0_hist: np.ndarray,
-                                  f0_edges: np.ndarray) -> None:
-    """Persist one file's precomputed data immediately after processing."""
-    path   = _precompute_checkpoint_path(output_npz)
-    record = {
-        "stem"    : stem,
-        "spk_emb" : _ndarray_to_b64(spk_emb),
-        "f0_mean" : f0_mean,
-        "f0_std"  : f0_std,
-        "f0_hist" : _ndarray_to_b64(f0_hist),
-        "f0_edges": _ndarray_to_b64(f0_edges),
-    }
-    with open(path, "a") as fh:
-        fh.write(json.dumps(record) + "\n")
-        fh.flush()
-        os.fsync(fh.fileno())
-
-
-def delete_precompute_checkpoint(output_npz: str) -> None:
-    """Remove the precompute checkpoint after a successful run."""
-    path = _precompute_checkpoint_path(output_npz)
-    if os.path.exists(path):
-        os.remove(path)
-        print(f"[KallaamaBench] Precompute checkpoint removed: {path}")
 
 
 # ---------------------------------------------------------------------------
@@ -430,11 +287,12 @@ def precompute_groundtruth(audio_folder: str, corpus_csv: str,
     call this function.
 
     The audio files must be sorted in the same order as the corpus CSV rows.
-
-    Resumable: if interrupted, re-running with the same arguments picks up
-    where it left off using a '<output_npz>.checkpoint.jsonl' sidecar file.
     """
     print("[KallaamaBench] Precomputing groundtruth vectors ...")
+
+    spkr_encoder = EncoderClassifier.from_hparams(
+        source=spkr_model_name, run_opts={"device": str(DEVICE)}
+    )
 
     corpus_df   = load_corpus(corpus_csv)
     audio_files = sorted([fn for fn in os.listdir(audio_folder) if fn.endswith(".wav")])
@@ -443,45 +301,14 @@ def precompute_groundtruth(audio_folder: str, corpus_csv: str,
         f"Mismatch: {len(audio_files)} audio files vs {len(corpus_df)} corpus rows"
     )
 
+    spk_embs, f0_means, f0_stds, f0_hists, f0_edges_all = [], [], [], [], []
+
     N_BINS    = 50
     F0_MIN    = librosa.note_to_hz("C2")
     F0_MAX    = librosa.note_to_hz("C7")
     bin_edges = np.linspace(F0_MIN, F0_MAX, N_BINS + 1)
 
-    # -- Load checkpoint: files already processed in a previous interrupted run
-    completed = load_precompute_checkpoint(output_npz)
-
-    remaining = [fn for fn in audio_files
-                 if os.path.splitext(fn)[0] not in completed]
-
-    # Only load the heavy encoder model if there is actual work left to do
-    if remaining:
-        spkr_encoder = EncoderClassifier.from_hparams(
-            source=spkr_model_name, run_opts={"device": str(DEVICE)}
-        )
-    else:
-        spkr_encoder = None
-        print("[KallaamaBench] All files already processed; skipping model loading.")
-
-    # Collect results in corpus order (important: .npz row order must match corpus)
-    spk_embs, f0_means, f0_stds, f0_hists, f0_edges_all = [], [], [], [], []
-
     for i, fn in enumerate(audio_files):
-        stem = os.path.splitext(fn)[0]
-
-        # -- Resume: replay cached result without reprocessing
-        if stem in completed:
-            rec = completed[stem]
-            spk_embs.append(rec["spk_emb"])
-            f0_means.append(rec["f0_mean"])
-            f0_stds.append(rec["f0_std"])
-            f0_hists.append(rec["f0_hist"])
-            f0_edges_all.append(rec["f0_edges"])
-            if (i + 1) % 100 == 0:
-                print(f"  {i + 1}/{len(audio_files)} done (from checkpoint)")
-            continue
-
-        # -- Process new file
         path      = os.path.join(audio_folder, fn)
         audio, sr = librosa.load(path, sr=None)
         audio_16k = librosa.resample(audio, orig_sr=sr, target_sr=TARGET_SR)
@@ -490,25 +317,15 @@ def precompute_groundtruth(audio_folder: str, corpus_csv: str,
         t = torch.tensor(audio_16k).unsqueeze(0).float().to(DEVICE)
         with torch.no_grad():
             emb = spkr_encoder.encode_batch(t).squeeze().cpu().numpy()
+        spk_embs.append(emb)
 
         # F0
         f0_voiced = extract_f0(audio_16k, TARGET_SR)
-        f0_mean   = float(np.mean(f0_voiced))
-        f0_std    = float(np.std(f0_voiced))
-        hist, _   = np.histogram(f0_voiced, bins=bin_edges)
-        f0_hist   = hist.astype(np.float32)
-        f0_edges  = bin_edges.astype(np.float32)
-
-        spk_embs.append(emb)
-        f0_means.append(f0_mean)
-        f0_stds.append(f0_std)
-        f0_hists.append(f0_hist)
-        f0_edges_all.append(f0_edges)
-
-        # -- Persist immediately so a crash doesn't lose this file's work
-        append_precompute_checkpoint(
-            output_npz, stem, emb, f0_mean, f0_std, f0_hist, f0_edges
-        )
+        f0_means.append(float(np.mean(f0_voiced)))
+        f0_stds.append(float(np.std(f0_voiced)))
+        hist, _ = np.histogram(f0_voiced, bins=bin_edges)
+        f0_hists.append(hist.astype(np.float32))
+        f0_edges_all.append(bin_edges.astype(np.float32))
 
         if (i + 1) % 100 == 0:
             print(f"  {i + 1}/{len(audio_files)} done")
@@ -522,9 +339,6 @@ def precompute_groundtruth(audio_folder: str, corpus_csv: str,
         f0_edges           = np.stack(f0_edges_all).astype(np.float32),
     )
     print(f"[KallaamaBench] Saved reference vectors -> {output_npz}")
-
-    # Clean up checkpoint now that the .npz is safely written
-    delete_precompute_checkpoint(output_npz)
 
 
 # ---------------------------------------------------------------------------
@@ -566,31 +380,13 @@ def evaluate(submission_dir: str, groundtruth_npz: str, corpus_csv: str,
     audio_files = sorted([fn for fn in os.listdir(audio_dir) if fn.endswith(".wav")])
     print(f"[KallaamaBench] Found {len(audio_files)} audio file(s) in submission.")
 
-    # -- Load checkpoint (already-scored samples from a previous interrupted run)
-    completed = load_checkpoint(output_json)
-
-    # -- Load models (skip if everything is already done)
-    remaining = [fn for fn in audio_files
-                 if os.path.splitext(fn)[0] not in completed
-                 and os.path.splitext(fn)[0] in corpus_index]
-    if remaining:
-        models = load_models(asr_model_card)
-    else:
-        models = {}
-        print("[KallaamaBench] All samples already scored; skipping model loading.")
+    # -- Load models
+    models = load_models(asr_model_card)
 
     # -- Score loop
     utmos_scores, wer_scores, snr_scores, spk_sim_scores, f0_corr_scores = \
         [], [], [], [], []
     skipped = []
-
-    # Re-populate score lists from checkpoint so aggregates are correct
-    for record in completed.values():
-        utmos_scores.append(record["utmos"])
-        wer_scores.append(record["wer"])
-        snr_scores.append(record["snr"])
-        spk_sim_scores.append(record["spk_sim"])
-        f0_corr_scores.append(record["f0_corr"])
 
     for i, fn in enumerate(audio_files):
         stem = os.path.splitext(fn)[0]
@@ -598,18 +394,6 @@ def evaluate(submission_dir: str, groundtruth_npz: str, corpus_csv: str,
         if stem not in corpus_index:
             warnings.warn(f"No corpus entry for '{fn}' -- skipping.")
             skipped.append(fn)
-            continue
-
-        # -- Resume: skip already-completed samples
-        if stem in completed:
-            row_idx, row = corpus_index[stem]
-            rec = completed[stem]
-            print(
-                f"[{i+1:04d}/{len(audio_files)}] {fn} SKIPPED (already scored) | "
-                f"UTMOS={rec['utmos']:.3f}  WER={rec['wer']:.3f}  "
-                f"SNR={rec['snr']:.1f}dB  SpkSim={rec['spk_sim']:.3f}  "
-                f"F0Corr={rec['f0_corr']:.3f}"
-            )
             continue
 
         row_idx, row = corpus_index[stem]
@@ -644,15 +428,6 @@ def evaluate(submission_dir: str, groundtruth_npz: str, corpus_csv: str,
         snr_scores.append(snr)
         spk_sim_scores.append(spk)
         f0_corr_scores.append(f0c)
-
-        # -- Persist this sample's scores immediately so a crash won't lose them
-        append_checkpoint(output_json, stem, {
-            "utmos"  : utmos,
-            "wer"    : wer_,
-            "snr"    : snr,
-            "spk_sim": spk,
-            "f0_corr": f0c,
-        })
 
         free_gpu()
 
@@ -693,10 +468,6 @@ def evaluate(submission_dir: str, groundtruth_npz: str, corpus_csv: str,
     for k, v in result.items():
         print(f"  {k:<22}: {v}")
     print(f"[KallaamaBench] Saved -> {output_json}")
-
-    # All samples scored successfully — the checkpoint is no longer needed.
-    delete_checkpoint(output_json)
-
     return result
 
 
