@@ -92,6 +92,7 @@ if __name__ == "__main__":
         audio           = generate_audio(formatted_prompt, context_tokens,
                                          inference_pipeline, generation_config, tts_codec)
         waveform        = torch.tensor(audio, dtype=torch.float32).unsqueeze(0)
+        
         inference_time  = time.time() - start_time
         audio_duration  = waveform.shape[1] / OUTPUT_SAMPLING_RATE
         rtf             = inference_time / audio_duration if audio_duration > 0 else float("inf")
