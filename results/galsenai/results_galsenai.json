@@ -1,0 +1,15 @@
+[
+    {
+        "team": "GalsenAI",
+        "system": "XTTSv2 fine-tuned on Wolof",
+        "submission_date": "2026-05-19",
+        "n_samples": 1602,
+        "n_skipped": 0,
+        "UTMOS": 2.8122692703456615,
+        "WER": 0.7101037891825043,
+        "SNR_dB": 53.940193021946705,
+        "SpeakerSimilarity": 0.5768946776158062,
+        "F0Correlation": 0.8243478360442079,
+        "RTF": 0.335
+    }
+]
