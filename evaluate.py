@@ -9,16 +9,25 @@ pip install omnilingual_asr==0.2.0
 
 Usage
 -----
+Precompute reference vectors
 python evaluate.py precompute \
     --audio-folder data/audio/ \
     --corpus       data/corpus.csv \
     --output-npz   data/groundtruth.npz
 
+Evaluate a submission of the full benchmark
 python evaluate.py evaluate \
-    --submission submissions/galsenai/ \
+    --submission submissions/mira-finetuned/ \
     --groundtruth data/groundtruth.npz \
     --corpus     data/corpus.csv \
-    --output     results/galsenai/results_galsenai.json
+    --output     results/mira-finetuned/results_mira_finetuned.json
+
+Evaluate a submission on code-switched samples only
+python evaluate.py evaluate \
+    --submission submissions/adia/ \
+    --groundtruth data/groundtruth.npz \
+    --corpus     data/corpus_code_switch.csv \
+    --output     results/adia/results_adia_code_switch.json
 
 Note: data/references/ contains per-speaker WAV files used by TTS models
 as conditioning audio during synthesis; they are NOT used by this script.

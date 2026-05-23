@@ -30,12 +30,12 @@ TOKEN = os.getenv("HF_TOKEN")
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
 CORPUS_FILE          = "/root/kallaama/data/corpus.csv"
-REFERENCE_AUDIO_FOLDER = "/root/kallaama/data/references"
-OUTPUT_DIR           = "/root/kallaama/submissions/mira-finetuned"
+REFERENCE_AUDIO_FOLDER = "/root/kallaama/data/references/audio/"
+OUTPUT_DIR           = "/root/kallaama/submissions/mira-finetuned/"
 OUTPUT_AUDIO_DIR     = os.path.join(OUTPUT_DIR, "audio")
 OUTPUT_METADATA      = os.path.join(OUTPUT_DIR, "metadata.json")
 
-MODEL_REPO = "intronhealth/miraTTS-kinyarwanda"
+MODEL_REPO = "intronhealth/miraTTS-wolof"
 OUTPUT_SAMPLING_RATE = 48000
 
 # Team information written to metadata.json
@@ -136,38 +136,37 @@ if __name__ == "__main__":
     # Generate and save audio for each sentence
     rtf_values = []
     for index, row in tqdm(corpus.iterrows(), total=len(corpus), desc="Generating audio"):
-        if index < 10:  # Limit to first 10 sentences for faster testing; remove this line for full corpus
-            sentence = row["transcription"].strip()
-            speaker = row["speaker"].strip()
+        sentence = row["transcription"].strip()
+        speaker = row["speaker"].strip()
 
-            if not sentence:  # Skip empty lines
-                continue
+        if not sentence:  # Skip empty lines
+            continue
 
-            # Build the prompt using the same template as process_wavs() in training.
-            # The prompt ends with <|prompt_speech_start|> — the model generates speech
-            # tokens from that point, terminated by its eos token (<|im_end|>).
-            start_time = time.time()
+        # Build the prompt using the same template as process_wavs() in training.
+        # The prompt ends with <|prompt_speech_start|> — the model generates speech
+        # tokens from that point, terminated by its eos token (<|im_end|>).
+        start_time = time.time()
 
-            reference_audio_file = os.path.join(REFERENCE_AUDIO_FOLDER, f"reference_{speaker}.wav")
-            ref_audio, _ = librosa.load(reference_audio_file, sr=16000)
-            context_tokens = tts_codec.audio_encoder.encode(ref_audio, encode_semantic=False)
+        reference_audio_file = os.path.join(REFERENCE_AUDIO_FOLDER, f"reference_{speaker}.wav")
+        ref_audio, _ = librosa.load(reference_audio_file, sr=16000)
+        context_tokens = tts_codec.audio_encoder.encode(ref_audio, encode_semantic=False)
 
-            sentence        = verbalizer.verbalize(sentence)
-            formatted_prompt = (
-                f"<|task_tts|><|start_text|>{sentence}<|end_text|>"
-                f"<|context_audio_start|>{context_tokens}<|context_audio_end|>"
-                f"<|prompt_speech_start|>"
-            )
+        sentence        = verbalizer.verbalize(sentence)
+        formatted_prompt = (
+            f"<|task_tts|><|start_text|>{sentence}<|end_text|>"
+            f"<|context_audio_start|>{context_tokens}<|context_audio_end|>"
+            f"<|prompt_speech_start|>"
+        )
 
-            audio = infer(formatted_prompt, context_tokens, model, tokenizer)
-            waveform = torch.tensor(audio, dtype=torch.float32).unsqueeze(0)
+        audio = infer(formatted_prompt, context_tokens, model, tokenizer)
+        waveform = torch.tensor(audio, dtype=torch.float32).unsqueeze(0)
 
-            inference_time = time.time() - start_time
-            audio_duration = waveform.shape[1] / OUTPUT_SAMPLING_RATE
-            rtf             = inference_time / audio_duration if audio_duration > 0 else float("inf")
-            rtf_values.append(rtf)
+        inference_time = time.time() - start_time
+        audio_duration = waveform.shape[1] / OUTPUT_SAMPLING_RATE
+        rtf             = inference_time / audio_duration if audio_duration > 0 else float("inf")
+        rtf_values.append(rtf)
 
-            torchaudio.save(os.path.join(OUTPUT_AUDIO_DIR, row["filename"]), waveform, OUTPUT_SAMPLING_RATE)
+        torchaudio.save(os.path.join(OUTPUT_AUDIO_DIR, row["filename"]), waveform, OUTPUT_SAMPLING_RATE)
 
     avg_rtf = sum(rtf_values) / len(rtf_values) if rtf_values else 0.0
     print(f"Audio files saved to: {OUTPUT_AUDIO_DIR}")

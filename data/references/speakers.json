@@ -1,0 +1,58 @@
+[
+    {
+        "speaker": "afy",
+        "full_name": "Afy Ndour",
+        "gender": "female",
+        "age_range": "25-30",
+        "dialect": "Dakar",
+        "email": ""
+    },
+    {
+        "speaker": "awa",
+        "full_name": "Awa Sène",
+        "gender": "female",
+        "age_range": "25-30",
+        "dialect": "Dakar",
+        "email": "awasenesene855@gmail.com"
+    },
+    {
+        "speaker": "baaxum",
+        "full_name": "Fatou Bakhoum",
+        "gender": "female",
+        "age_range": "20-25",
+        "dialect": "Dakar",
+        "email": ""
+    },
+    {
+        "speaker": "manjaay",
+        "full_name": "Mandiaye Dramé",
+        "gender": "male",
+        "age_range": "20-25",
+        "dialect": "Sine-Saloum",
+        "email": "mandiayedrame62@gmail.com"
+    },
+    {
+        "speaker": "njuga",
+        "full_name": "Njuga Gaye",
+        "gender": "male",
+        "age_range": "30-35",
+        "dialect": "Walo-Walo",
+        "email": ""
+    },
+    {
+        "speaker": "pad",
+        "full_name": "Pape Ali Diallo",
+        "gender": "male",
+        "age_range": "30-35",
+        "dialect": "Pulaar",
+        "email": ""
+    },
+    {
+        "speaker": "tuuti",
+        "full_name": "Tuuti Diop",
+        "gender": "female",
+        "age_range": "20-25",
+        "dialect": "Sine-Saloum",
+        "email": ""
+    }
+]
