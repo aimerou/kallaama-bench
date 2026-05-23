@@ -3,6 +3,7 @@
 *.tmp
 *.env
 *__pycache__/
+*__MACOSX/
 *unsloth_compiled_cache/
 data/audio/
 data/mos-evaluation/
