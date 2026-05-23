@@ -9,8 +9,8 @@ Usage
 -----
 python mos_files_copy.py \
     --medoids  mos_medoids.json \
-    --audiodir ../data/audio \
-    --destdir  ../data/mos-evaluation/groundtruth/
+    --audiodir ../submissions/galsenai/audio \
+    --destdir  ../data/mos-evaluation/galsenai/
 """
 
 import argparse

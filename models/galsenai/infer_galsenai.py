@@ -1,9 +1,18 @@
-# Download model: gdown 1jsGAMBo354uRhwVKNnuJpLtq2uJYcVHN
-# Unzip model: unzip galsenai-xtts-wo-checkpoints
-# Clone repository: git clone https://github.com/nguyenhoanganh2002/XTTSv2-Finetuning-for-New-Languages.git
-# Install dependencies: cd XTTSv2-Finetuning-for-New-Languages
-#                       pip install -r requirements.txt
-#                       pip install TTS
+"""
+Requirements
+------------
+Download model: gdown 1jsGAMBo354uRhwVKNnuJpLtq2uJYcVHN
+Unzip model: unzip galsenai-xtts-wo-checkpoints
+Clone repository: git clone https://github.com/nguyenhoanganh2002/XTTSv2-Finetuning-for-New-Languages.git
+Install dependencies: cd XTTSv2-Finetuning-for-New-Languages
+                      pip install -r requirements.txt
+                      pip install TTS
+Update the tokenizer.py file to support Wolof with the language code "wo"
+
+Usage
+-----
+python infer_galsenai.py
+"""
 
 import os
 import json
@@ -20,8 +29,8 @@ from verbalizer import WolofTTSVerbalizer
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
 CORPUS_FILE          = "/root/kallaama/data/corpus.csv"
-REFERENCE_AUDIO_FOLDER = "/root/kallaama/data/references"
-OUTPUT_DIR           = "/root/kallaama/outputs/galsenai"
+REFERENCE_AUDIO_FOLDER = "/root/kallaama/data/references/audio/"
+OUTPUT_DIR           = "/root/kallaama/outputs/galsenai/"
 OUTPUT_AUDIO_DIR     = os.path.join(OUTPUT_DIR, "audio")
 OUTPUT_METADATA      = os.path.join(OUTPUT_DIR, "metadata.json")
 
