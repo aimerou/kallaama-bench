@@ -1,0 +1,15 @@
+[
+    {
+        "team": "K2-FSA",
+        "system": "Omnivoice",
+        "submission_date": "2026-05-19",
+        "n_samples": 1602,
+        "n_skipped": 0,
+        "UTMOS": 2.8434561778245944,
+        "WER": 0.6942193667507,
+        "SNR_dB": 100.0,
+        "SpeakerSimilarity": 0.674611411830608,
+        "F0Correlation": 0.845838022100714,
+        "RTF": 0.153
+    }
+]

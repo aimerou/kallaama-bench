@@ -6,8 +6,6 @@ pip install omnivoice
 Usage
 -----
 python infer_omnivoice.py
-
-Text transcriptions of reference audio files ??
 """
 
 import os

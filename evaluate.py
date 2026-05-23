@@ -15,10 +15,10 @@ python evaluate.py precompute \
     --output-npz   data/groundtruth.npz
 
 python evaluate.py evaluate \
-    --submission submissions/mira-finetuned/ \
+    --submission submissions/omnivoice/ \
     --groundtruth data/groundtruth.npz \
     --corpus     data/corpus.csv \
-    --output     results/mira-finetuned/results_mira_finetuned.json
+    --output     results/omnivoice/results_omnivoice.json
 
 Note: data/references/ contains per-speaker WAV files used by TTS models
 as conditioning audio during synthesis; they are NOT used by this script.
