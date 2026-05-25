@@ -137,7 +137,7 @@ See [SUBMISSION_FORMAT.md](SUBMISSION_FORMAT.md) for details.
 
 ```bibtex
 @misc{kallaamabench2026,
-  title   = {KallaamaBench: A TTS Evaluation Benchmark for Wolof},
+  title   = {Kallaama-Bench: A Low-Resource TTS and Voice Cloning Benchmark for the Wolof Language},
   author  = {Aïmérou Ndiaye, Maïssa Mbaye, Cheikh Mouhamadou Bamba Dione},
   year    = {2026},
   url     = {https://github.com/aimerou/kallaama-bench}
