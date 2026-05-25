@@ -17,7 +17,7 @@ scores submissions against hidden reference data.
 | Rank | System | MOS↑ | UTMOS↑ | WER↓ | SNR↑ (dB) | RTF↓ | SpkSim↑ | F0 Corr↑ | Date |
 |:---:|---|---|:---:|:---:|:---:|:---:|:---:|:---:|---|
 | 1 | *Oolel-Voices* | *4.17* | *3.01* | *0.61* | *170.74* | *0.64* | *0.51* | *0.78* | 2026-05-25 |
-| 2 | *Mira-WO* | *3.1 ± 0.5* | *3.1* | *3.12* | *3.21* | *0.38* | *18.4* | *0.09* | 2026-05-25 |
+| 2 | *Mira-WO* | *3.36* | *2.37* | *1.05* | *11.40* | *0.18* | *0.34* | *0.77* | 2026-05-25 |
 | 3 | *Omnilingual* | *3.1 ± 0.5* | *3.1* | *3.12* | *3.21* | *0.38* | *18.4* | *0.09* | 2026-05-25 |
 | 4 | *Galsen AI TTS* | *3.1 ± 0.5* | *3.1* | *3.12* | *3.21* | *0.38* | *18.4* | *0.09* | 2026-05-25 |
 | 5 | *Adia-TTS* | *3.1 ± 0.5* | *3.1* | *3.12* | *3.21* | *0.38* | *18.4* | *0.09* | 2026-05-25 |
@@ -36,7 +36,7 @@ scores submissions against hidden reference data.
 | **F0Corr** ↑ | pYIN + Pearson correlation | Pitch dynamics match |
 | **RTF** ↓ | Self-reported | Speed of synthesis |
 
-Top-5 systems are evaluated monthly by native Wolof speakers (CMOS, scale −3 to +3).
+Top-5 systems are evaluated monthly by native Wolof speakers to deliver the mean opinion score (MOS).
 
 ---
 

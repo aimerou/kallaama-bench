@@ -7,7 +7,7 @@ matching audio file from the source dataset into a flat destination folder.
 
 Usage
 -----
-python mos_files_copy.py \
+python copy_mos_files.py \
     --medoids  mos_medoids.json \
     --audiodir ../submissions/mira-finetuned/audio \
     --destdir  ../data/mos-evaluation/mira-finetuned/
