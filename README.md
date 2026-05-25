@@ -14,7 +14,7 @@ scores submissions against hidden reference data.
 
 *Last updated: 2026-05-12*
 
-| Rank | System | MOS ↑ | UTMOS ↑ | WER ↓ | SNR ↑ (dB) | RTF ↓ | SpkSim ↑ | F0 Corr ↑ | Date |
+| Rank | System | MOS↑ | UTMOS↑ | WER↓ | SNR↑ (dB) | RTF↓ | SpkSim↑ | F0 Corr↑ | Date |
 |:---:|---|---|:---:|:---:|:---:|:---:|:---:|:---:|---|
 | — | *Baseline* | *3.1 ± 0.5* | *3.1* | *3.12* | *3.21* | *0.38* | *18.4* | *0.09* | 2026-01-15 |
 
