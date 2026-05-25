@@ -44,19 +44,24 @@ Top-5 systems are evaluated monthly by native Wolof speakers to deliver the mean
 
 ```
 kallaamabench/
-├── evaluate.py              # Evaluation script
-├── SUBMISSION_FORMAT.md
-├── README.md
-│
 ├── data/
-│   ├── corpus.csv           # 1602 Wolof sentences (filename|transcription|speaker|gender)
+│   ├── corpus.csv            # Metadata of 1602 Wolof sentences (filename|transcription|speaker|gender)
 │   ├── groundtruth.npz       # Precomputed speaker embeddings + F0 stats
-│   └── rtf_scores.json
+│   └── references            # Reference audio samples used for voice cloning (WAV, 16 kHz mono)
 │
-└── dev/
-    ├── corpus_dev.csv        # 100-sentence dev subset
-    ├── audio/                # Reference audio for dev set (WAV, 16 kHz mono)
-    └── groundtruth_dev.npz
+├── models/                   # Inference scripts for each evaluated model
+│
+├── results/                  # JSON files containing evaluation results
+│
+├── utils/
+│    ├── copy_mos_files.csv   # Copy files used for MOS evaluation
+│    └── verbalizer           # Script used for text normalization (dates, currencies, etc.)
+│
+├── README.md
+├── SUBMISSION_FORMAT.md      # Instructions to submit a new TTS model to the leaderboard
+├── evaluate.py               # Evaluation script
+└── requirements.txt          # Package requirements with specific versions
+
 ```
 
 ---
