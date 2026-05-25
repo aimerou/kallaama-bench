@@ -96,7 +96,7 @@ for _, row in tqdm(corpus.iterrows(), total=len(corpus), desc="Generating audio"
     rtf_values.append((time.time() - start_time) / audio_duration)
 ```
 
-### 3. Create `metadata.json`
+### 3. Create `metadata.json` in the submission folder
 
 ```json
 {
