@@ -1,0 +1,15 @@
+[
+    {
+        "team": "YatharthS",
+        "system": "MiraTTS",
+        "submission_date": "2026-05-19",
+        "n_samples": 1602,
+        "n_skipped": 0,
+        "UTMOS": 2.366427646594101,
+        "WER": 1.0474534827506257,
+        "SNR_dB": 11.396308898925781,
+        "SpeakerSimilarity": 0.3437114513918674,
+        "F0Correlation": 0.7710714545232376,
+        "RTF": 0.1764
+    }
+]

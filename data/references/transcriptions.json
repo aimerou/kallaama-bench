@@ -1,0 +1,37 @@
+[
+    {
+        "speaker": "afy",
+        "reference": "reference_afy.wav",
+        "transcription": "Këru defarukaayu po gii di Konami dafa wax tey ci benn yéen"
+    },
+    {
+        "speaker": "awa",
+        "reference": "reference_awa.wav",
+        "transcription": "Li wutale baatin ci yeneen xeeti njaamu ak ngëm yi aju ci diine mooy ni, ki nekk ci baatin day fésal dundug boppam ci wenn nekkiinu xel, rawatina bu dee nit ku dal, am yëg-yëg, bég walla muy jommi."
+    },
+    {
+        "speaker": "baaxum",
+        "reference": "reference_baaxum.wav",
+        "transcription": "Mënees na fa seen ay mala yu jafe niki ursub tugal bu tig bi, xaju àll bi, jaxaay ji, looy bi, saafandu si, muusu àll ak rabu « tétras » bu mag bi ak yeneen xeeti mala yees miin."
+    },
+    {
+        "speaker": "manjaay",
+        "reference": "reference_manjaay.wav",
+        "transcription": "MetroRail amal na ñaari kalaas ci saxaaru bãliya bu Cap ak li ko wër : MetroPlus (ñu koy tuppe itam kalaas bu jëkk) ak Metro (ñu koy oowe ñetteelu kalaas)."
+    },
+    {
+        "speaker": "njuga",
+        "reference": "reference_njuga.wav",
+        "transcription": "Réew mi am nay kurél yoo xan ni seen ngirte du lenn lu dul seet mbooloo mu takku te farlu ngir ànd ak moom, dimbali leen ak i jumtukaay ba ñu mën a jëmbët i garab."
+    },
+    {
+        "speaker": "pad",
+        "reference": "reference_pad.wav",
+        "transcription": "Ci nasaraan, SRAS mi ngi tekki Syndrome Respiratoire Aigu Sévère, cov dib gàttal ñeel « coronavirus » ci nasaraan, tey wone ni SRAS ci xeeti koronaaviris yi la bokk."
+    },
+    {
+        "speaker": "tuuti",
+        "reference": "reference_tuuti.wav",
+        "transcription": "Ni mu juddóo ci Running Tours Barcelona bu Barcelone ak Running Copenhagen de Copenhague, noonu la ko Running Tours Prague bi sampu Prague ak ñeneen fekkasee."
+    }
+]

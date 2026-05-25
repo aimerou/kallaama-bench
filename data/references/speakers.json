@@ -1,0 +1,44 @@
+[
+    {
+        "speaker": "afy",
+        "gender": "female",
+        "age_range": "25-30",
+        "dialect": "Dakar"
+    },
+    {
+        "speaker": "awa",
+        "gender": "female",
+        "age_range": "25-30",
+        "dialect": "Dakar"
+    },
+    {
+        "speaker": "baaxum",
+        "gender": "female",
+        "age_range": "20-25",
+        "dialect": "Dakar"
+    },
+    {
+        "speaker": "manjaay",
+        "gender": "male",
+        "age_range": "20-25",
+        "dialect": "Sine-Saloum"
+    },
+    {
+        "speaker": "njuga",
+        "gender": "male",
+        "age_range": "30-35",
+        "dialect": "Walo-Walo"
+    },
+    {
+        "speaker": "pad",
+        "gender": "male",
+        "age_range": "30-35",
+        "dialect": "Pulaar"
+    },
+    {
+        "speaker": "tuuti",
+        "gender": "female",
+        "age_range": "20-25",
+        "dialect": "Sine-Saloum"
+    }
+]

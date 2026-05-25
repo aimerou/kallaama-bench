@@ -1,0 +1,15 @@
+[
+    {
+        "team": "CONCREE",
+        "system": "Adia TTS (Parler-TTS fine-tune)",
+        "submission_date": "2026-05-19",
+        "n_samples": 1602,
+        "n_skipped": 0,
+        "UTMOS": 2.452022862047441,
+        "WER": 0.7210532163307029,
+        "SNR_dB": 29.023385549873375,
+        "SpeakerSimilarity": 0.2559941581024685,
+        "F0Correlation": 0.559649510553234,
+        "RTF": 1.4229
+    }
+]
