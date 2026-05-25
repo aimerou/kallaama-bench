@@ -22,13 +22,6 @@ python evaluate.py evaluate \
     --corpus     data/corpus.csv \
     --output     results/mira-finetuned/results_mira_finetuned.json
 
-Evaluate a submission on code-switched samples only
-python evaluate.py evaluate \
-    --submission submissions/adia/ \
-    --groundtruth data/groundtruth.npz \
-    --corpus     data/corpus_code_switch.csv \
-    --output     results/adia/results_adia_cs.json
-
 Note: data/references/ contains per-speaker WAV files used by TTS models
 as conditioning audio during synthesis; they are NOT used by this script.
 """
@@ -385,7 +378,7 @@ def evaluate(submission_dir: str, groundtruth_npz: str, corpus_csv: str,
         rtf = 0.0
 
     # -- Discover submitted audio files
-    audio_dir   = os.path.join(submission_dir, "audio") # "audio" for full benchmark, "code-switch" for code-switched samples.
+    audio_dir   = os.path.join(submission_dir, "audio")
     audio_files = sorted([fn for fn in os.listdir(audio_dir) if fn.endswith(".wav")])
     print(f"[KallaamaBench] Found {len(audio_files)} audio file(s) in submission.")
 

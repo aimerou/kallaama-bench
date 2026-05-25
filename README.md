@@ -77,16 +77,23 @@ pip install -r requirements.txt
 ### 2. Synthesise the test sentences
 
 ```python
-import pandas as pd, soundfile as sf
-from your_tts_model import TTSModel
+import time
+import torchaudio
+import pandas as pd
+from my_tts_model import TTSModel
 
-model  = TTSModel.load("your_checkpoint")
-corpus = pd.read_csv("data/corpus.csv", sep="|")
+submission_dir = "submissions/my_tts_model"
+os.makedirs(submission_dir, exist_ok=True)
 
-os.makedirs("my_submission/audio", exist_ok=True)
-for _, row in corpus.iterrows():
-    audio, sr = model.synthesise(row["transcription"])
-    sf.write(f"my_submission/audio/{row['filename']}", audio, sr)
+model  = TTSModel.load("my_checkpoint")
+corpus = pd.read_csv("data/corpus.csv", sep="|", header=0, on_bad_lines="skip", dtype=str)
+
+rtf_values = []
+for _, row in tqdm(corpus.iterrows(), total=len(corpus), desc="Generating audio"):
+    start_time     = time.time()
+    audio, sr      = model.synthesise(row["transcription"])
+    torchaudio.save(os.path.join(submission_dir, row["filename"]), audio, sr)
+    rtf_values.append((time.time() - start_time) / audio_duration)
 ```
 
 ### 3. Create `metadata.json`
@@ -95,20 +102,20 @@ for _, row in corpus.iterrows():
 {
     "team"            : "MyTeam",
     "system"          : "FastSpeech2 + HiFi-GAN",
-    "submission_date" : "2026-05-12",
+    "submission_date" : "2026-05-25",
     "rtf"             : 0.038,
     "contact"         : "me@example.com"
 }
 ```
 
-### 4. Validate locally on the dev set
+### 4. Validate locally on the test set
 
 ```bash
 python evaluate.py evaluate \
-    --submission  my_submission/ \
-    --groundtruth  dev/groundtruth_dev.npz \
-    --corpus      dev/corpus_dev.csv \
-    --output      dev_results.json
+    --submission    submissions/my_tts_model/ \
+    --groundtruth   data/groundtruth.npz \
+    --corpus        data/corpus.csv \
+    --output        results/my_tts_model/my_tts_model.json
 ```
 
 ### 5. Submit
@@ -131,8 +138,8 @@ See [SUBMISSION_FORMAT.md](SUBMISSION_FORMAT.md) for details.
 ```bibtex
 @misc{kallaamabench2026,
   title   = {KallaamaBench: A TTS Evaluation Benchmark for Wolof},
-  author  = {Your Name and Collaborators},
+  author  = {Aïmérou Ndiaye, Maïssa Mbaye, Cheikh Mouhamadou Bamba Dione},
   year    = {2026},
-  url     = {https://github.com/yourorg/kallaamabench}
+  url     = {https://github.com/aimerou/kallaama-bench}
 }
 ```
