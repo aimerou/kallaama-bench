@@ -14,9 +14,9 @@ scores submissions against hidden reference data.
 
 *Last updated: 2026-05-12*
 
-| Rank | System | Human MOS ↑ | UTMOS ↑ | WER ↓ | SNR ↑ (dB) | RTF ↓ | SpkSim ↓ | F0Corr ↑ | Date |
-|:---:|---|:---:|:---:|:---:|:---:|:---:|:---:|---|
-| — | *Baseline* | *VITS (10 h Wolof)* | *3.1 ± 0.5* | *3.12* | *3.21* | *0.38* | *18.4* | *0.09* | *0.62* | 2026-01-15 |
+| Rank | Team | System | Human MOS ↑ | TTS Score ↑ | UTMOS ↑ | WER ↓ | SNR ↑ (dB) | RTF ↓ | Date |
+|:---:|---|---|:---:|:---:|:---:|:---:|:---:|:---:|---|
+| — | *Baseline* | *VITS (10 h Wolof)* | *3.1 ± 0.5* | *3.12* | *3.21* | *0.38* | *18.4* | *0.09* | 2026-01-15 |
 
 ---
 
