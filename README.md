@@ -17,11 +17,14 @@ scores submissions against hidden reference data.
 | Rank | System | MOS↑ | UTMOS↑ | WER↓ | SNR↑ (dB) | RTF↓ | SpkSim↑ | F0 Corr↑ | Date |
 |:---:|---|---|:---:|:---:|:---:|:---:|:---:|:---:|---|
 | 1 | *Oolel-Voices* | *4.17* | *3.01* | *0.61* | *170.74* | *0.64* | *0.51* | *0.78* | 2026-05-25 |
-| 2 | *Mira-WO* | *3.61* | *2.57* | *0.66* | *12.33* | *0.18* | *0.48* | *0.69* | 2026-05-25 |
-| 3 | *OmniVoice* | *3.56* | *2.84* | *0.69* | *100.00* | *0.15* | *0.67* | *0.85* | 2026-05-25 |
-| 4 | *Galsen AI TTS* | *3.36* | *2.81* | *0.71* | *53.94* | *0.34* | *0.58* | *0.82* | 2026-05-25 |
-| 5 | *Adia-TTS* | *3.02* | *2.45* | *0.72* | *29.02* | *1.42* | *-* | *-* | 2026-05-25 |
-| 6 | *Mira-EN* | *-* | *2.37* | *1.05* | *11.40* | *0.18* | *0.34* | *0.77* | 2026-05-25 |
+| 2 | *OmniVoice* | *3.56* | *2.84* | *0.69* | *100.00* | *0.15* | *0.67* | *0.85* | 2026-05-25 |
+| 3 | *GalsenAI-TTS* | *3.36* | *2.81* | *0.71* | *53.94* | *0.34* | *0.58* | *0.82* | 2026-05-25 |
+| 4 | *Adia-TTS* | *3.02* | *2.45* | *0.72* | *29.02* | *1.42* | *-* | *-* | 2026-05-25 |
+| 5 | *Mira* | *-* | *2.37* | *1.05* | *11.40* | *0.18* | *0.34* | *0.77* | 2026-05-25 |
+| - | *Mira-FT* | *-* | *-* | *-* | *-* | *-* | *-* | *-* | 2026-07-14 |
+| - | *Mira-FT-CS* | *-* | *-* | *-* | *-* | *-* | *-* | *-* | 2026-07-14 |
+| - | *OmniVoice-FT* | *-* | *-* | *-* | *-* | *-* | *-* | *-* | 2026-07-14 |
+| - | *OmniVoice-FT-CS* | *-* | *-* | *-* | *-* | *-* | *-* | *-* | 2026-07-14 |
 
 ---
 
@@ -45,7 +48,7 @@ Top-5 systems are evaluated monthly by native Wolof speakers to deliver the mean
 ```
 kallaamabench/
 ├── data/
-│   ├── corpus.csv            # Metadata of 1602 Wolof sentences (filename|transcription|speaker|gender)
+│   ├── corpus.csv            # Metadata of Wolof test utterances (filename|transcription|speaker|gender)
 │   ├── groundtruth.npz       # Precomputed speaker embeddings + F0 stats
 │   └── references            # Reference audio samples used for voice cloning (WAV, 16 kHz mono)
 │
@@ -60,7 +63,7 @@ kallaamabench/
 ├── README.md
 ├── SUBMISSION_FORMAT.md      # Instructions to submit a new TTS model to the leaderboard
 ├── evaluate.py               # Evaluation script
-└── requirements.txt          # Package requirements with specific versions
+└── requirements.txt          # Package dependecies with specific versions
 
 ```
 

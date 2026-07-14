@@ -1,0 +1,43 @@
+model:
+  name: "miraTTS-wolof"
+  repo: "Baamtu/tts-mira-code-switched"
+  dtype: "float32"          # float32 | bfloat16  (fp16 causes NaNs)
+  load_in_4bit: false
+  full_finetuning: true
+
+inference:
+  corpus_file: "../../data/corpus.csv"
+  corpus_separator: "|"
+
+  reference_audio_dir: "../../data/references/"
+  output_dir: "../../submissions/mira-ft-cs/"
+
+  synthesis_sampling_rate: 48000
+  output_sampling_rate: 16000
+
+  num_sentences: null        # null = synthesise the full corpus (1602 rows); set an int to test on a subset
+  warmup_runs: 1
+
+  generation:
+    top_k: 50
+    top_p: 1.0
+    temperature: 0.8
+    repetition_penalty: 1.2
+    max_new_audio_tokens: 1024
+
+  audio_processing:
+    sample_rate: 16000        # sample rate used when loading reference audio for encoding
+
+submission:
+  team: "Baamtu"
+  system: "MiraTTS Wolof Code-Switched"
+  contact: "contact@baamtu.com"
+  notes: "A100 inference, float32, full fine-tuning"
+
+evaluation:
+  audio_folder: "../../submissions/mira-ft-cs/audio/"
+  output_json_file: "../../results/mira-ft-cs/results_mira_ft_cs.json"
+  denoiser_model: "speechbrain/sepformer-wham16k-enhancement"
+  snr:
+    chunk_duration_s: 5
+    min_chunk_duration_s: 0.5   # chunks shorter than this are skipped
