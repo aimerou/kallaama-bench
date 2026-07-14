@@ -5,7 +5,7 @@ pip install --upgrade omnivoice
 
 Usage
 -----
-python infer_omni.py --config-path ../../configs/evaluation/eval_omni.yaml
+python infer_omni.py --config-path configs/infer_omni_ft.yaml
 
 Produces a KallaamaBench submission folder:
     <output_dir>/
@@ -56,17 +56,18 @@ def resolve_reference_audio_path(speaker: str, reference_audio_dir: str) -> str:
     return os.path.join(reference_audio_dir, f"reference_{speaker}.wav")
 
 
-def resolve_reference_transcription_path(speaker: str, reference_transcription_dir: str) -> str:
+def load_reference_transcriptions(reference_transcriptions_file: str) -> dict:
+    """Loads reference transcriptions from a JSON file shaped as a list of
+    {"speaker", "reference", "transcription"} records, keyed by speaker id."""
+    with open(reference_transcriptions_file, "r", encoding="utf-8") as f:
+        records = json.load(f)
+    return {record["speaker"].strip(): record["transcription"] for record in records}
+
+
+def resolve_reference_transcription(speaker: str, reference_transcriptions: dict) -> str:
     """Resolves the reference transcription for a given speaker."""
     speaker = speaker.strip()
-    return os.path.join(reference_transcription_dir, f"reference_{speaker}.txt")
-
-
-def load_reference_transcription(path: str) -> str:
-    with open(path, "r", encoding="utf-8") as f:
-        for line in f:
-            return line.strip()  # Assuming only one line in the reference transcription file
-    return ""
+    return reference_transcriptions[speaker]
 
 
 def save_submission_audio(audio, native_sampling_rate, output_sampling_rate, output_path):
@@ -98,7 +99,7 @@ if __name__ == "__main__":
     corpus_file                  = cfg["inference"]["corpus_file"]
     corpus_separator             = cfg["inference"].get("corpus_separator", "|")
     reference_audio_dir          = cfg["inference"]["reference_audio_dir"]
-    reference_transcription_dir  = cfg["inference"]["reference_transcription_dir"]
+    reference_transcriptions_file = cfg["inference"]["reference_transcriptions_file"]
 
     # Submission output
     output_dir              = cfg["inference"]["output_dir"]
@@ -135,16 +136,18 @@ if __name__ == "__main__":
     # Initialize verbalizer
     verbalizer = WolofTTSVerbalizer()
 
+    # Load reference transcriptions once from the JSON file
+    reference_transcriptions = load_reference_transcriptions(reference_transcriptions_file)
+
     # Resolve and cache (ref_audio_path, ref_text) per speaker so each unique
-    # reference is only read from disk once.
+    # reference is only resolved once.
     reference_cache = {}
 
     def get_reference(speaker):
         speaker = speaker.strip()
         if speaker not in reference_cache:
             ref_audio_path = resolve_reference_audio_path(speaker, reference_audio_dir)
-            ref_text_path = resolve_reference_transcription_path(speaker, reference_transcription_dir)
-            ref_text = load_reference_transcription(ref_text_path)
+            ref_text = resolve_reference_transcription(speaker, reference_transcriptions)
             reference_cache[speaker] = (ref_audio_path, ref_text)
         return reference_cache[speaker]
 
