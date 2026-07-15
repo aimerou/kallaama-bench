@@ -1,19 +1,4 @@
 """
-Requirements
-------------
-1. Install training requirements
-2. Install inference requirements
-    pip install git+https://github.com/ysharma3501/MiraTTS.git
-3. In case of tvm-ffi issue (unsloth dependency), install the right version
-    pip install "apache-tvm-ffi==0.1.11"
-4. In case of torchcodec issue, make sure ffmpeg is available, then install the right version
-    pip uninstall -y torchcodec
-    pip install "torchcodec==0.10.*" --index-url https://download.pytorch.org/whl/cu128
-
-Usage
------
-python3 infer_mira_t4.py --config-path configs/infer_mira_ft.yaml
-
 Produces a KallaamaBench submission folder:
     <output_dir>/
     ├── metadata.json
@@ -21,6 +6,21 @@ Produces a KallaamaBench submission folder:
         ├── <filename from corpus.csv row 1>
         ├── <filename from corpus.csv row 2>
         └── ...
+
+Requirements
+------------
+1. Install training requirements
+    pip install -r requirements.txt
+2. Install inference requirements
+    pip install git+https://github.com/ysharma3501/MiraTTS.git
+3. Set up environment variable for Hugging Face token
+    export HF_TOKEN=your_huggingface_token
+4. In case of tvm-ffi issue (unsloth dependency), install the right version
+    pip install "apache-tvm-ffi==0.1.11"
+
+Usage
+-----
+python3 infer_mira_t4.py --config-path configs/infer_mira_ft.yaml
 """
 
 import argparse

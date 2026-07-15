@@ -1,12 +1,4 @@
 """
-Requirements
-------------
-pip install --upgrade omnivoice
-
-Usage
------
-python infer_omni.py --config-path configs/infer_omni_ft.yaml
-
 Produces a KallaamaBench submission folder:
     <output_dir>/
     ├── metadata.json
@@ -14,6 +6,17 @@ Produces a KallaamaBench submission folder:
         ├── <filename from corpus.csv row 1>
         ├── <filename from corpus.csv row 2>
         └── ...
+
+Requirements
+------------
+1. Install dependencies
+    pip install --upgrade omnivoice
+2. Set up environment variable for Hugging Face token
+    export HF_TOKEN=your_huggingface_token
+
+Usage
+-----
+python infer_omni.py --config-path configs/infer_omni_ft_cs.yaml
 """
 
 import argparse
