@@ -12,10 +12,10 @@ export HF_TOKEN=your_huggingface_token
 Example Usage
 -------------
 # Single split
-python3 hf_dataset_download.py --dataset repo/name --splits train --dest /path/to/dest/
+python3 hf_dataset_download.py --dataset user/repo-name --splits train --dest /path/to/dest/
 
 # Multiple splits (merged)
-python3 hf_dataset_download.py --dataset aimerou/tts-wolof-monolingual --splits train test --dest /root/wolof-tts/data/monolingual/
+python3 hf_dataset_download.py --dataset user/repo-name --splits train test --dest /path/to/dest/
 """
 
 import os
@@ -26,8 +26,8 @@ from tqdm import tqdm
 import soundfile as sf
 
 # Defaults (can be overridden via CLI args)
-DEFAULT_DATASET = "aimerou/tts-wolof-code-switched"
-DEFAULT_DEST    = "/root/wolof-tts/data/"
+DEFAULT_DATASET = "user/repo-name"
+DEFAULT_DEST    = "/root/kallaama-bench/data/"
 DEFAULT_SPLITS  = ["train", "test"]
 
 # Dataset field names
