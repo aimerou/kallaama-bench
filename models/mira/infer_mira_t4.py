@@ -20,7 +20,7 @@ Requirements
 
 Usage
 -----
-python3 infer_mira_t4.py --config-path configs/infer_mira_ft.yaml
+python3 infer_mira_t4.py --config-path configs/infer_mira_ft_cs.yaml
 """
 
 import argparse
