@@ -7,6 +7,14 @@ Requirements
 ------------
 pip install omnilingual_asr
 
+Code-Switching Usage
+--------------------
+python evaluate.py evaluate \
+    --submission data/cs-evaluation/outputs/omnivoice-ft-cs/ \
+    --groundtruth data/groundtruth_cs.npz \
+    --corpus     data/cs-evaluation/code_switch_corpus.csv \
+    --output     data/cs-evaluation/results/results_omnivoice_ft_cs.json
+
 Usage
 -----
 Precompute reference vectors
@@ -17,7 +25,7 @@ python evaluate.py precompute \
 
 Evaluate a submission of the full benchmark
 python evaluate.py evaluate \
-    --submission submissions/mira-ft-cs/ \
+    --submission submissions/omnivoice-ft-cs/ \
     --groundtruth data/groundtruth.npz \
     --corpus     data/corpus.csv \
     --output     results/mira-ft-cs/results_mira_ft_cs.json
