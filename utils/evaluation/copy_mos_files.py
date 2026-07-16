@@ -8,9 +8,9 @@ matching audio file from the source dataset into a flat destination folder.
 Usage
 -----
 python copy_mos_files.py \
-    --medoids  mos_medoids.json \
-    --audiodir ../submissions/mira-finetuned/audio \
-    --destdir  ../data/mos-evaluation/mira-finetuned/
+    --medoids  ../../data/mos-evaluation/clustering/medoids.json \
+    --audiodir ../../submissions/omnivoice-ft-cs/audio \
+    --destdir  ../../data/mos-evaluation/outputs/omnivoice-ft-cs/
 """
 
 import argparse

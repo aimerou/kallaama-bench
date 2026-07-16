@@ -5,7 +5,15 @@ Metrics: UTMOS · WER · SNR · RTF · Speaker Similarity · F0 Correlation
 
 Requirements
 ------------
-pip install omnilingual_asr==0.2.0
+pip install omnilingual_asr
+
+Code-Switching Usage
+--------------------
+python evaluate.py evaluate \
+    --submission data/cs-evaluation/outputs/omnivoice-ft-cs/ \
+    --groundtruth data/groundtruth_cs.npz \
+    --corpus     data/cs-evaluation/code_switch_corpus.csv \
+    --output     data/cs-evaluation/results/results_omnivoice_ft_cs.json
 
 Usage
 -----
@@ -17,10 +25,10 @@ python evaluate.py precompute \
 
 Evaluate a submission of the full benchmark
 python evaluate.py evaluate \
-    --submission submissions/mira-finetuned/ \
+    --submission submissions/omnivoice-ft-cs/ \
     --groundtruth data/groundtruth.npz \
     --corpus     data/corpus.csv \
-    --output     results/mira-finetuned/results_mira_finetuned.json
+    --output     results/mira-ft-cs/results_mira_ft_cs.json
 
 Note: data/references/ contains per-speaker WAV files used by TTS models
 as conditioning audio during synthesis; they are NOT used by this script.

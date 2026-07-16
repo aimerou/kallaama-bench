@@ -1,0 +1,15 @@
+[
+    {
+        "team": "Baamtu",
+        "system": "MiraTTS Wolof Monolingual",
+        "submission_date": "2026-07-15",
+        "n_samples": 1602,
+        "n_skipped": 0,
+        "UTMOS": 2.5002541988529963,
+        "WER": 0.6698493337857506,
+        "SNR_dB": 9.218213292060659,
+        "SpeakerSimilarity": 0.47254337485699094,
+        "F0Correlation": 0.7900452809928842,
+        "RTF": 1.73
+    }
+]
