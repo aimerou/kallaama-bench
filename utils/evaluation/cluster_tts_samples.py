@@ -14,9 +14,9 @@ Dataset structure expected
 Usage
 -----
 python cluster_tts_samples.py \
-    --metadata  data/metadata.csv \
-    --audiodir  data/audio \
-    --outdir    output/ \
+    --metadata  ../../data/corpus.csv \
+    --audiodir  ../../data/audio \
+    --outdir    ../../data/mos-evaluation/clustering/ \
     [--n-clusters 6] \
     [--delimiter "|"]
 """
