@@ -1,6 +1,6 @@
 model:
   name: OmniVoice
-  repo: Baamtu/tts-omnivoice-monolingual
+  repo: user-name/tts-omnivoice-monolingual
   dtype: float16           # torch dtype, e.g. float16, bfloat16, float32
 
 inference:
@@ -17,7 +17,7 @@ inference:
   num_sentences: null        # null = synthesise the full corpus (1602 rows); set an int to test on a subset
 
 submission:
-  team: "Baamtu"
+  team: "Kallaama-Bench"
   system: "OmniVoice Wolof Monolingual"
   contact: "contact@baamtu.com"
   notes: ""

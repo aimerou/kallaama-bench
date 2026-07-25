@@ -264,7 +264,7 @@ if __name__ == "__main__":
 
     # Write metadata.json, per SUBMISSION_FORMAT.md
     metadata = {
-        "team": sub_cfg.get("team", "Baamtu"),
+        "team": sub_cfg.get("team", "Kallaama-Bench Team"),
         "system": sub_cfg.get("system", model_cfg["name"]),
         "submission_date": time.strftime("%Y-%m-%d"),
         "contact": sub_cfg.get("contact", ""),

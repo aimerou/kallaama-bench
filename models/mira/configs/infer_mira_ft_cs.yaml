@@ -1,6 +1,6 @@
 model:
   name: "miraTTS-wolof"
-  repo: "Baamtu/tts-mira-code-switched"
+  repo: "user-name/tts-mira-code-switched"
   dtype: "float32"          # float32 | bfloat16  (fp16 causes NaNs)
   load_in_4bit: false
   full_finetuning: true
@@ -28,9 +28,9 @@ inference:
     sample_rate: 16000        # sample rate used when loading reference audio for encoding
 
 submission:
-  team: "Baamtu"
+  team: "Kallaama-Bench Team"
   system: "MiraTTS Wolof Code-Switched"
-  contact: "contact@baamtu.com"
+  contact: "contact@contact.com"
   notes: "A100 inference, float32, full fine-tuning"
 
 evaluation:
