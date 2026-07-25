@@ -16,15 +16,15 @@ scores submissions against hidden reference data.
 
 | Rank | System | MOS↑ | UTMOS↑ | WER↓ | SNR↑ (dB) | RTF↓ | SpkSim↑ | F0 Corr↑ | Date |
 |:---:|---|---|:---:|:---:|:---:|:---:|:---:|:---:|---|
-| - | *Adia-TTS* | 3.02 | 2.45 | 0.72 | 29.02 | 1.42 | - | - | 2026-05-25 |
-| - | *GalsenAI-TTS* | 3.36 | 2.81 | 0.71 | 53.94 | 0.34 | 0.58 | 0.82 | 2026-05-25 |
-| - | *Oolel-Voices* | **4.17** | **3.01** | **0.61** | **170.74** | 0.64 | 0.51 | 0.78 | 2026-05-25 |
-| - | *OmniVoice* | 3.56 | 2.84 | 0.69 | 100.00 | **0.15** | **0.67** | **0.85** | 2026-05-25 |
-| - | *OmniVoice-FT* | - | 2.68 | 0.67 | 100.0 | **0.15** | 0.57 | **0.85** | 2026-07-14 |
-| - | *OmniVoice-FT-CS* | - | 2.78 | **0.61** | 100.0 | **0.15** | 0.63 | 0.84 | 2026-07-14 |
-| - | *MiraTTS* | - | 2.37 | 1.05 | 11.40 | 0.18 | 0.34 | 0.77 | 2026-05-25 |
-| - | *MiraTTS-FT* | - | 2.50 | 0.67 | 9.22 | 0.18 | 0.47 | 0.79 | 2026-07-14 |
-| - | *MiraTTS-FT-CS* | - | 2.50 | 0.72 | 13.79 | 0.18 | 0.46 | 0.81 | 2026-07-14 |
+| - | *Adia-TTS* | 3.02 | 2.45 | 0.72 | 61.27 | 1.42 | - | - | 2026-05-25 |
+| - | *GalsenAI-TTS* | 3.36 | 2.81 | 0.71 | 60.37 | 0.34 | 0.58 | 0.82 | 2026-05-25 |
+| - | *Oolel-Voices* | **4.17** | **3.01** | **0.61** | 58.20 | 0.64 | 0.51 | 0.78 | 2026-05-25 |
+| - | *OmniVoice* | 3.56 | 2.84 | 0.69 | 58.64 | **0.15** | **0.67** | **0.85** | 2026-05-25 |
+| - | *OmniVoice-FT* | **4.17** | 2.68 | 0.67 | **67.69** | **0.15** | 0.57 | **0.85** | 2026-07-14 |
+| - | *OmniVoice-FT-CS* | 4.10 | 2.78 | **0.61** | 65.05 | **0.15** | 0.63 | 0.84 | 2026-07-14 |
+| - | *MiraTTS* | - | 2.37 | 1.05 | 53.16 | 0.18 | 0.34 | 0.77 | 2026-05-25 |
+| - | *MiraTTS-FT* | 3.71 | 2.50 | 0.67 | 59.68 | 0.18 | 0.47 | 0.79 | 2026-07-14 |
+| - | *MiraTTS-FT-CS* | 3.23 | 2.50 | 0.72 | 57.88 | 0.18 | 0.46 | 0.81 | 2026-07-14 |
 
 ---
 
@@ -34,7 +34,7 @@ scores submissions against hidden reference data.
 |---|---|---|
 | **UTMOS** ↑ | UTMOSv2 | Predicted naturalness (1–5) |
 | **WER** ↓ | Omnilingual ASR + jiwer | Intelligibility |
-| **SNR** ↑ | SpeechBrain SepFormer | Signal cleanliness (dB) |
+| **SNR** ↑ | PyAnnote Brouhaha | Signal cleanliness (dB) |
 | **SpkSim** ↑ | ECAPA-TDNN cosine similarity | Voice similarity to reference speaker |
 | **F0Corr** ↑ | pYIN + Pearson correlation | Pitch dynamics match |
 | **RTF** ↓ | Self-reported | Speed of synthesis |
@@ -52,7 +52,7 @@ kallaamabench/
 │   ├── groundtruth.npz       # Precomputed speaker embeddings + F0 stats
 │   └── references            # Reference audio samples used for voice cloning (WAV, 16 kHz mono)
 │
-├── models/                   # Inference scripts for each evaluated model
+├── inference/                # Inference scripts for each evaluated model
 │
 ├── results/                  # JSON files containing evaluation results
 │
@@ -133,6 +133,18 @@ See [SUBMISSION_FORMAT.md](SUBMISSION_FORMAT.md) for details.
 - The test set audio (1602 recordings) is **never released**.
 - `data/corpus.csv` and `data/groundtruth.npz` are public.
 - `groundtruth.npz` contains speaker embeddings (192-dim) and F0 histogram statistics only — raw audio cannot be reconstructed.
+
+---
+
+## License
+
+This work is licensed under a [Creative Commons Attribution 4.0 International License (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/).
+
+[![CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
+
+You are free to share and adapt under the following terms:
+
+- **Attribution** — You must give appropriate credit, provide a link to the license, and indicate if changes were made.
 
 ---
 

@@ -15,8 +15,6 @@ Requirements
     pip install git+https://github.com/ysharma3501/MiraTTS.git
 3. Set up environment variable for Hugging Face token
     export HF_TOKEN=your_huggingface_token
-4. In case of tvm-ffi issue (unsloth dependency), install the right version
-    pip install "apache-tvm-ffi==0.1.11"
 
 Usage
 -----
@@ -264,7 +262,7 @@ if __name__ == "__main__":
 
     # Write metadata.json, per SUBMISSION_FORMAT.md
     metadata = {
-        "team": sub_cfg.get("team", "Baamtu"),
+        "team": sub_cfg.get("team", "Kallaama-Bench Team"),
         "system": sub_cfg.get("system", model_cfg["name"]),
         "submission_date": time.strftime("%Y-%m-%d"),
         "contact": sub_cfg.get("contact", ""),

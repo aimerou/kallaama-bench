@@ -5,7 +5,7 @@ Oolel TTS Inference Script
 Requirements
 ------------
 pip install -r requirements.txt
-apt-get update && apt-get install -y ffmpeg
+apt update && apt install -y ffmpeg
 
 Usage
 -----
@@ -25,9 +25,9 @@ from verbalizer import WolofTTSVerbalizer
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
-CORPUS_FILE            = "/root/kallaama/data/corpus.csv"
-REFERENCE_AUDIO_FOLDER = "/root/kallaama/data/references"
-OUTPUT_DIR             = "/root/kallaama/submissions/oolel"
+CORPUS_FILE            = "/root/kallaama-bench/data/corpus.csv"
+REFERENCE_AUDIO_FOLDER = "/root/kallaama-bench/data/references/audio"
+OUTPUT_DIR             = "/root/kallaama-bench/submissions/oolel"
 OUTPUT_AUDIO_DIR       = os.path.join(OUTPUT_DIR, "audio")
 OUTPUT_METADATA        = os.path.join(OUTPUT_DIR, "metadata.json")
 
@@ -35,7 +35,7 @@ MODEL_REPO = "soynade-research/Oolel-Voices"
 
 # Team information written to metadata.json
 METADATA = {
-    "team"            : "Soynade Research",
+    "team"            : "Kallaama-Bench Team",
     "system"          : "Oolel Voices",
     "submission_date" : "2026-05-19",
     "contact"         : "contact@example.com",

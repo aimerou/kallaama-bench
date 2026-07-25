@@ -1,6 +1,6 @@
 model:
   name: OmniVoice
-  repo: Baamtu/tts-omnivoice-monolingual
+  repo: k2-fsa/OmniVoice
   dtype: float16           # torch dtype, e.g. float16, bfloat16, float32
 
 inference:
@@ -9,7 +9,7 @@ inference:
 
   reference_audio_dir: "../../data/references/audio/"
   reference_transcriptions_file: "../../data/references/transcriptions.json"
-  output_dir: "../../submissions/omnivoice-ft/"
+  output_dir: "../../submissions/omnivoice/"
 
   synthesis_sampling_rate: 24000
   output_sampling_rate: 16000
@@ -17,14 +17,14 @@ inference:
   num_sentences: null        # null = synthesise the full corpus (1602 rows); set an int to test on a subset
 
 submission:
-  team: "Baamtu"
-  system: "OmniVoice Wolof Monolingual"
-  contact: "contact@baamtu.com"
+  team: "Kallaama-Bench Team"
+  system: "OmniVoice"
+  contact: "contact@example.com"
   notes: ""
 
 evaluation:
-  audio_folder: "../../submissions/omnivoice-ft/audio/"
-  output_json_file: "../../results/omnivoice-ft/results_omnivoice_ft.json"
+  audio_folder: "../../submissions/omnivoice/audio/"
+  output_json_file: "../../results/omnivoice/results_omnivoice.json"
   denoiser_model: speechbrain/sepformer-wham16k-enhancement
   snr:
     chunk_duration_s: 5

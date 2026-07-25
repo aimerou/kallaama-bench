@@ -28,13 +28,13 @@ from verbalizer import WolofTTSVerbalizer
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
-CORPUS_FILE          = "/root/kallaama/data/corpus.csv"
-REFERENCE_AUDIO_FOLDER = "/root/kallaama/data/references/audio/"
-OUTPUT_DIR           = "/root/kallaama/outputs/galsenai/"
+CORPUS_FILE          = "/root/kallaama-bench/data/corpus.csv"
+REFERENCE_AUDIO_FOLDER = "/root/kallaama-bench/data/references/audio/"
+OUTPUT_DIR           = "/root/kallaama-bench/submissions/galsenai/"
 OUTPUT_AUDIO_DIR     = os.path.join(OUTPUT_DIR, "audio")
 OUTPUT_METADATA      = os.path.join(OUTPUT_DIR, "metadata.json")
 
-CHECKPOINTS_ROOT = "/root/kallaama/models/galsenai-xtts-wo-checkpoints/"
+CHECKPOINTS_ROOT = "/root/kallaama-bench/inference/galsenai/galsenai-xtts-wo-checkpoints/"
 CHECKPOINT_DIR   = os.path.join(CHECKPOINTS_ROOT, "Anta_GPT_XTTS_Wo")
 MODEL_FILE       = "best_model_89250.pth"
 VOCAB_FILE       = os.path.join(CHECKPOINTS_ROOT, "XTTS_v2.0_original_model_files/vocab.json")
@@ -42,7 +42,7 @@ OUTPUT_SAMPLING_RATE = 24000
 
 # Team information written to metadata.json
 METADATA = {
-    "team"            : "GalsenAI",
+    "team"            : "Kallaama-Bench Team",
     "system"          : "XTTSv2 fine-tuned on Wolof",
     "submission_date" : "2026-05-19",
     "contact"         : "contact@example.com",

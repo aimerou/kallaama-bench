@@ -1,6 +1,6 @@
 model:
   name: OmniVoice
-  repo: Baamtu/tts-omnivoice-code-switched
+  repo: user-name/tts-omnivoice-code-switched
   dtype: float16           # torch dtype, e.g. float16, bfloat16, float32
 
 inference:
@@ -17,9 +17,9 @@ inference:
   num_sentences: null        # null = synthesise the full corpus (1602 rows); set an int to test on a subset
 
 submission:
-  team: "Baamtu"
+  team: "Kallaama-Bench Team"
   system: "OmniVoice Wolof Code-Switched"
-  contact: "contact@baamtu.com"
+  contact: "contact@example.com"
   notes: ""
 
 evaluation:

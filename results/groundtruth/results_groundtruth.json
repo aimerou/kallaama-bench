@@ -1,0 +1,15 @@
+[
+    {
+        "team": "Kallaama-Bench Team",
+        "system": "Groundtuth Samples",
+        "submission_date": "2026-07-25",
+        "n_samples": 100,
+        "n_skipped": 0,
+        "UTMOS": 2.7558984375,
+        "WER": 0.5310272679063694,
+        "SNR_dB": 42.832302827835086,
+        "SpeakerSimilarity": 0.9999998443928472,
+        "F0Correlation": 0.9929735147988477,
+        "RTF": 0.0
+    }
+]

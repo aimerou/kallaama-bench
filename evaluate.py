@@ -6,14 +6,15 @@ Metrics: UTMOS · WER · SNR · RTF · Speaker Similarity · F0 Correlation
 Requirements
 ------------
 pip install omnilingual_asr
+pip install speechbrain
+pip install pyannote-audio
+pip install https://github.com/marianne-m/brouhaha-vad/archive/main.zip
 
-Code-Switching Usage
---------------------
-python evaluate.py evaluate \
-    --submission data/cs-evaluation/outputs/omnivoice-ft-cs/ \
-    --groundtruth data/groundtruth_cs.npz \
-    --corpus     data/cs-evaluation/code_switch_corpus.csv \
-    --output     data/cs-evaluation/results/results_omnivoice_ft_cs.json
+SNR is computed with Brouhaha, a pyannote-based model jointly trained for VAD,
+frame-level SNR estimation. It requires a Hugging Face access token:
+  1. Visit hf.co/pyannote/brouhaha and accept the user conditions.
+  2. Visit hf.co/settings/tokens to create an access token.
+  3. export HF_TOKEN=your_token_here before running this script.
 
 Usage
 -----
@@ -25,10 +26,10 @@ python evaluate.py precompute \
 
 Evaluate a submission of the full benchmark
 python evaluate.py evaluate \
-    --submission submissions/omnivoice-ft-cs/ \
+    --submission submissions/oolel/ \
     --groundtruth data/groundtruth.npz \
     --corpus     data/corpus.csv \
-    --output     results/mira-ft-cs/results_mira_ft_cs.json
+    --output     results/oolel/results_oolel.json
 
 Note: data/references/ contains per-speaker WAV files used by TTS models
 as conditioning audio during synthesis; they are NOT used by this script.
@@ -49,15 +50,17 @@ import pandas as pd
 import utmosv2
 from jiwer import wer
 from scipy.stats import pearsonr
-from speechbrain.inference.separation import SepformerSeparation as separator
+from pyannote.audio import Model, Inference
 from speechbrain.inference.speaker import EncoderClassifier
 from omnilingual_asr.models.inference.pipeline import ASRInferencePipeline
 
 # ---------------------------------------------------------------------------
 # Configuration
 # ---------------------------------------------------------------------------
-DENOISER_NAME    = "speechbrain/sepformer-wham16k-enhancement"
+BROUHAHA_MODEL_NAME = "pyannote/brouhaha"       # requires an HF access token, see README
+HF_TOKEN         = os.environ.get("HF_TOKEN")   # export HF_TOKEN=... before running
 SPKR_MODEL_NAME  = "speechbrain/spkrec-ecapa-voxceleb"
+SNR_VAD_THRESHOLD = 0.5                         # frames with vad below this are excluded from the SNR average
 ASR_MODEL_CARD   = "omniASR_LLM_1B"             # override via --asr-model
 LANGUAGE_CODE    = "wol_Latn"                   # override via --language-code
 TARGET_SR        = 16_000
@@ -153,9 +156,8 @@ def load_models(asr_model_card: str = ASR_MODEL_CARD) -> dict:
 
     utmos_model  = utmosv2.create_model(pretrained=True)
     asr_pipeline = ASRInferencePipeline(model_card=asr_model_card, device=str(DEVICE))
-    denoiser     = separator.from_hparams(
-        source=DENOISER_NAME, run_opts={"device": str(DEVICE)}
-    )
+    brouhaha_model = Model.from_pretrained(BROUHAHA_MODEL_NAME, use_auth_token=HF_TOKEN)
+    brouhaha       = Inference(brouhaha_model, device=DEVICE)
     spkr_encoder = EncoderClassifier.from_hparams(
         source=SPKR_MODEL_NAME, run_opts={"device": str(DEVICE)}
     )
@@ -163,7 +165,7 @@ def load_models(asr_model_card: str = ASR_MODEL_CARD) -> dict:
     return dict(
         utmos=utmos_model,
         asr_pipeline=asr_pipeline,
-        denoiser=denoiser,
+        brouhaha=brouhaha,
         spkr_encoder=spkr_encoder,
     )
 
@@ -209,20 +211,22 @@ def compute_wer(audio: np.ndarray, reference: str,
     return wer(reference, hypothesis)
 
 
-def _snr_power(signal: np.ndarray, noise: np.ndarray) -> float:
-    n     = min(len(signal), len(noise))
-    s_pwr = np.mean(signal[:n] ** 2)
-    n_pwr = np.mean(noise[:n]  ** 2)
-    return 10 * np.log10(s_pwr / n_pwr) if n_pwr > 0 else 100.0
-
-
 def compute_snr(audio: np.ndarray, models: dict) -> float:
-    """Signal-to-Noise Ratio via SepFormer source separation."""
-    t = torch.tensor(audio).unsqueeze(0).float().to(DEVICE)
-    with torch.no_grad():
-        result         = models["denoiser"].separate_batch(t)
-        noise_estimate = result.permute(0, 2, 1)[0][0]
-    return _snr_power(t.cpu().numpy(), noise_estimate.cpu().numpy())
+    """
+    Signal-to-Noise Ratio via Brouhaha (pyannote), a model jointly trained for
+    VAD, frame-level SNR, and C50 room-acoustics estimation.
+
+    Brouhaha returns a (vad, snr, c50) triple per frame; we average the SNR
+    only over frames it predicts as speech (vad > SNR_VAD_THRESHOLD), since
+    SNR estimates on non-speech frames aren't meaningful.
+    """
+    waveform = torch.tensor(audio).unsqueeze(0).float()
+    output   = models["brouhaha"]({"waveform": waveform, "sample_rate": TARGET_SR})
+
+    snr_values = [snr for _, (vad, snr, _c50) in output if vad > SNR_VAD_THRESHOLD]
+    if not snr_values:
+        return 0.0
+    return float(np.mean(snr_values))
 
 
 def compute_speaker_similarity(audio: np.ndarray, ref_embedding: np.ndarray, models: dict) -> float:
