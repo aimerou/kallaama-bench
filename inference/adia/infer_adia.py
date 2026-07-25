@@ -5,8 +5,7 @@ Adia TTS Inference Script
 Requirements
 ------------
 pip install git+https://github.com/huggingface/parler-tts.git
-pip install torch torchaudio transformers
-apt-get update && apt-get install -y ffmpeg
+apt update && apt install -y ffmpeg
 
 Usage
 -----
@@ -26,8 +25,8 @@ from verbalizer import WolofTTSVerbalizer
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
-CORPUS_FILE      = "/root/kallaama/data/corpus.csv"
-OUTPUT_DIR       = "/root/kallaama/submissions/adia"
+CORPUS_FILE      = "/root/kallaama-bench/data/corpus.csv"
+OUTPUT_DIR       = "/root/kallaama-bench/submissions/adia"
 OUTPUT_AUDIO_DIR = os.path.join(OUTPUT_DIR, "audio")
 OUTPUT_METADATA  = os.path.join(OUTPUT_DIR, "metadata.json")
 
@@ -35,7 +34,7 @@ MODEL_REPO = "CONCREE/Adia_TTS"
 
 # Team information written to metadata.json
 METADATA = {
-    "team"            : "CONCREE",
+    "team"            : "Kallaama-Bench Team",
     "system"          : "Adia TTS (Parler-TTS fine-tune)",
     "submission_date" : "2026-05-19",
     "contact"         : "contact@example.com",

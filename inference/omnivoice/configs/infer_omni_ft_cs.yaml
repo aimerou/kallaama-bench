@@ -19,7 +19,7 @@ inference:
 submission:
   team: "Kallaama-Bench Team"
   system: "OmniVoice Wolof Code-Switched"
-  contact: "contact@contact.com"
+  contact: "contact@example.com"
   notes: ""
 
 evaluation:

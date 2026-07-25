@@ -10,9 +10,8 @@ pip install speechbrain
 pip install pyannote-audio
 pip install https://github.com/marianne-m/brouhaha-vad/archive/main.zip
 
-SNR is computed with Brouhaha (https://github.com/marianne-m/brouhaha-vad),
-a pyannote-based model jointly trained for VAD, frame-level SNR, and C50
-room-acoustics estimation. It requires a Hugging Face access token:
+SNR is computed with Brouhaha, a pyannote-based model jointly trained for VAD,
+frame-level SNR estimation. It requires a Hugging Face access token:
   1. Visit hf.co/pyannote/brouhaha and accept the user conditions.
   2. Visit hf.co/settings/tokens to create an access token.
   3. export HF_TOKEN=your_token_here before running this script.
@@ -27,10 +26,10 @@ python evaluate.py precompute \
 
 Evaluate a submission of the full benchmark
 python evaluate.py evaluate \
-    --submission submissions/groundtruth/ \
+    --submission submissions/oolel/ \
     --groundtruth data/groundtruth.npz \
     --corpus     data/corpus.csv \
-    --output     results/groundtruth/results_groundtruth.json
+    --output     results/oolel/results_oolel.json
 
 Note: data/references/ contains per-speaker WAV files used by TTS models
 as conditioning audio during synthesis; they are NOT used by this script.

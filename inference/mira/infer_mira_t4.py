@@ -15,8 +15,6 @@ Requirements
     pip install git+https://github.com/ysharma3501/MiraTTS.git
 3. Set up environment variable for Hugging Face token
     export HF_TOKEN=your_huggingface_token
-4. In case of tvm-ffi issue (unsloth dependency), install the right version
-    pip install "apache-tvm-ffi==0.1.11"
 
 Usage
 -----

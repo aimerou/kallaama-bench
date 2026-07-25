@@ -12,7 +12,7 @@ export HF_TOKEN=your_huggingface_token
 Example Usage
 -------------
 # Single split
-python3 hf_dataset_download.py --dataset aimerou/tts-wolof-kallaama-bench --splits train --dest ../../data/audio/
+python3 hf_dataset_download.py --dataset user/repo-name --splits train --dest /path/to/dest/
 
 # Multiple splits (merged)
 python3 hf_dataset_download.py --dataset user/repo-name --splits train test --dest /path/to/dest/
