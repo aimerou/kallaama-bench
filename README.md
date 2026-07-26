@@ -57,8 +57,8 @@ kallaamabench/
 ├── results/                  # JSON files containing evaluation results
 │
 ├── utils/
-│    ├── copy_mos_files.csv   # Copy files used for MOS evaluation
-│    └── verbalizer           # Script used for text normalization (dates, currencies, etc.)
+│    ├── evaluation           # Python scripts used for MOS evaluation
+│    └── hf-utils             # Python script to donwload data from Hugging Face
 │
 ├── README.md
 ├── SUBMISSION_FORMAT.md      # Instructions to submit a new TTS model to the leaderboard
@@ -145,16 +145,3 @@ This work is licensed under a [Creative Commons Attribution 4.0 International Li
 You are free to share and adapt under the following terms:
 
 - **Attribution** — You must give appropriate credit, provide a link to the license, and indicate if changes were made.
-
----
-
-## Citation
-
-```bibtex
-@misc{kallaamabench2026,
-  title   = {Kallaama-Bench: A Low-Resource TTS and Voice Cloning Benchmark for the Wolof Language},
-  author  = {Aïmérou Ndiaye, Maïssa Mbaye, Cheikh Mouhamadou Bamba Dione},
-  year    = {2026},
-  url     = {https://github.com/aimerou/kallaama-bench}
-}
-```

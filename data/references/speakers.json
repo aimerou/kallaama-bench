@@ -3,31 +3,31 @@
         "speaker": "afy",
         "gender": "female",
         "age_range": "25-30",
-        "dialect": "Dakar"
+        "dialect": "Ndakaaru"
     },
     {
         "speaker": "awa",
         "gender": "female",
         "age_range": "25-30",
-        "dialect": "Dakar"
+        "dialect": "Ndakaaru"
     },
     {
         "speaker": "baaxum",
         "gender": "female",
         "age_range": "20-25",
-        "dialect": "Dakar"
+        "dialect": "Ndakaaru"
     },
     {
         "speaker": "manjaay",
         "gender": "male",
         "age_range": "20-25",
-        "dialect": "Sine-Saloum"
+        "dialect": "Siin-Saalum"
     },
     {
         "speaker": "njuga",
         "gender": "male",
         "age_range": "30-35",
-        "dialect": "Walo-Walo"
+        "dialect": "Waalo-Waalo"
     },
     {
         "speaker": "pad",
@@ -39,6 +39,6 @@
         "speaker": "tuuti",
         "gender": "female",
         "age_range": "20-25",
-        "dialect": "Sine-Saloum"
+        "dialect": "Siin-Saalum"
     }
 ]
