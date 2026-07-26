@@ -130,7 +130,7 @@ See [SUBMISSION_FORMAT.md](SUBMISSION_FORMAT.md) for details.
 
 ## Data policy
 
-- The test set audio (1602 recordings) is **never released**.
+- The test set audio (1602 recordings) is released only in its compressed Numpy format.
 - `data/corpus.csv` and `data/groundtruth.npz` are public.
 - `groundtruth.npz` contains speaker embeddings (192-dim) and F0 histogram statistics only — raw audio cannot be reconstructed.
 
