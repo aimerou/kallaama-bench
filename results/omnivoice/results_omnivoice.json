@@ -1,7 +1,7 @@
 [
     {
-        "team": "K2-FSA",
-        "system": "Kallaama-Bench Team",
+        "team": "Kallaama-Bench Team",
+        "system": "OmniVoice",
         "submission_date": "2026-05-19",
         "n_samples": 1602,
         "n_skipped": 0,
