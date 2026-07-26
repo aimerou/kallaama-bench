@@ -1,6 +1,6 @@
 [
     {
-        "team": "GalsenAI",
+        "team": "Kallaama-Bench Team",
         "system": "XTTSv2 fine-tuned on Wolof",
         "submission_date": "2026-05-19",
         "n_samples": 1602,
