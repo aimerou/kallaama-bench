@@ -1,3 +1,13 @@
+#!/usr/bin/env -S uv run --script
+# /// script
+# requires-python = ">=3.10"
+# dependencies = [
+#     "datasets==3.6.0",
+#     "soundfile",
+#     "librosa",
+#     "tqdm",
+# ]
+# ///
 """
 hf_dataset_download.py
 -----------------------
@@ -6,16 +16,16 @@ Supports a single split or multiple splits (which get merged into one dataset).
 
 Requirements
 ------------
-pip install -r requirements.txt
+Dependencies are declared in the inline script metadata above (installed by `uv run`).
 export HF_TOKEN=your_huggingface_token
 
 Example Usage
 -------------
 # Single split
-python3 hf_dataset_download.py --dataset user/repo-name --splits train --dest /path/to/dest/
+uv run hf_dataset_download.py --dataset user/repo-name --splits train --dest /path/to/dest/
 
 # Multiple splits (merged)
-python3 hf_dataset_download.py --dataset user/repo-name --splits train test --dest /path/to/dest/
+uv run hf_dataset_download.py --dataset user/repo-name --splits train test --dest /path/to/dest/
 """
 
 import os

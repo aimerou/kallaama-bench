@@ -1,0 +1,15 @@
+[
+    {
+        "team": "Kallaama-Bench Team",
+        "system": "Kiriku-TTS",
+        "submission_date": "2026-10-29",
+        "n_samples": 1602,
+        "n_skipped": 0,
+        "UTMOS": 2.873659512523408,
+        "WER": 0.6208583269226438,
+        "SNR_dB": 63.649285871289045,
+        "SpeakerSimilarity": 0.2644253717258703,
+        "F0Correlation": 0.4091779839102483,
+        "RTF": 0.023
+    }
+]

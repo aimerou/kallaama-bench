@@ -1,0 +1,15 @@
+[
+    {
+        "team": "Kallaama-Bench Team",
+        "system": "Pocket-TTS",
+        "submission_date": "2026-10-29",
+        "n_samples": 1602,
+        "n_skipped": 0,
+        "UTMOS": 2.3848153065504056,
+        "WER": 0.7135622803066304,
+        "SNR_dB": 56.193576618675586,
+        "SpeakerSimilarity": 0.37711587157472504,
+        "F0Correlation": 0.8404923581935839,
+        "RTF": 0.869
+    }
+]

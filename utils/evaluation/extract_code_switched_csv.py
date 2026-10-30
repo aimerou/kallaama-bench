@@ -1,4 +1,8 @@
-#!/usr/bin/env python3
+#!/usr/bin/env -S uv run --script
+# /// script
+# requires-python = ">=3.10"
+# dependencies = []
+# ///
 """
 Extract Code-Switched Samples to CSV
 ======================================
@@ -8,7 +12,7 @@ only those rows and writes them to a new CSV file.
 
 Usage
 -----
-python extract_code_switched_csv.py \
+uv run extract_code_switched_csv.py \
     --json      ../../data/cs-evaluation/stats/code_switch_counts.json \
     --metadata  ../../data/corpus.csv \
     --output    ../../data/cs-evaluation/code_switch_corpus.csv \

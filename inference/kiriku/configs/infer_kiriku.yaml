@@ -1,0 +1,28 @@
+model:
+  name: Kiriku-TTS
+  repo: AIHubSN/Kiriku-Wolof-TTS     # gated: accept the conditions on the Hub and export HF_TOKEN
+  checkpoint_dir: "./kiriku-checkpoints/"
+
+inference:
+  corpus_file: "../../data/corpus.csv"
+  corpus_separator: "|"
+
+  output_dir: "../../submissions/kiriku/"
+
+  output_sampling_rate: 16000   # synthesis rate (22050 Hz) is read from the model config
+
+  num_sentences: null        # null = synthesise the full corpus (1602 rows); set an int to test on a subset
+
+submission:
+  team: "Kallaama-Bench Team"
+  system: "Kiriku-TTS"
+  contact: "contact@example.com"
+  notes: "A100 inference, single speaker, no voice cloning"
+
+evaluation:
+  audio_folder: "../../submissions/kiriku/audio/"
+  output_json_file: "../../results/kiriku/results_kiriku.json"
+  denoiser_model: speechbrain/sepformer-wham16k-enhancement
+  snr:
+    chunk_duration_s: 5
+    min_chunk_duration_s: 0.5   # chunks shorter than this are skipped

@@ -1,3 +1,27 @@
+# /// script
+# requires-python = ">=3.10,<3.13"
+# dependencies = [
+#     "torch==2.8.0",
+#     "torchaudio==2.8.0",
+#     "torchvision==0.23.0",
+#     "transformers==4.56.2",
+#     "accelerate==1.8.1",
+#     "unsloth",
+#     "ncodec @ git+https://github.com/ysharma3501/FastBiCodec.git",
+#     "fastaudiosr @ git+https://github.com/ysharma3501/FlashSR.git",
+#     "onnxruntime-gpu",
+#     "omegaconf",
+#     "einx",
+#     "einops",
+#     "librosa==0.11.0",
+#     "soundfile==0.13.1",
+#     "numpy",
+#     "pandas",
+#     "pyyaml",
+#     "tqdm",
+#     "huggingface_hub",
+# ]
+# ///
 """
 Produces a KallaamaBench submission folder:
     <output_dir>/
@@ -9,16 +33,14 @@ Produces a KallaamaBench submission folder:
 
 Requirements
 ------------
-1. Install training requirements
-    pip install -r requirements.txt
-2. Install inference requirements
-    pip install git+https://github.com/ysharma3501/MiraTTS.git
-3. Set up environment variable for Hugging Face token
+1. Dependencies are declared in the inline script metadata above; `uv run` installs them
+   in an isolated environment. requirements.txt holds the training dependencies.
+2. Set up environment variable for Hugging Face token
     export HF_TOKEN=your_huggingface_token
 
 Usage
 -----
-python3 infer_mira_t4.py --config-path configs/infer_mira_ft_cs.yaml
+uv run infer_mira_t4.py --config-path configs/infer_mira_ft_cs.yaml
 """
 
 import argparse

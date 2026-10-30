@@ -9,3 +9,6 @@ data/audio/
 data/cs-evaluation/
 data/mos-evaluation/
 submissions/
+CLAUDE.md
+AGENTS.md
+inference/pocket-tts/

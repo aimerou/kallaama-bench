@@ -1,4 +1,8 @@
-#!/usr/bin/env python3
+#!/usr/bin/env -S uv run --script
+# /// script
+# requires-python = ">=3.10"
+# dependencies = []
+# ///
 """
 Copy MOS Evaluation Audio Files
 ===============================
@@ -7,7 +11,7 @@ matching audio file from the source dataset into a flat destination folder.
 
 Usage
 -----
-python copy_mos_files.py \
+uv run copy_mos_files.py \
     --medoids  ../../data/mos-evaluation/clustering/medoids.json \
     --audiodir ../../submissions/omnivoice-ft-cs/audio \
     --destdir  ../../data/mos-evaluation/outputs/omnivoice-ft-cs/
