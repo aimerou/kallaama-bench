@@ -166,25 +166,6 @@ A GPU is recommended: the script loads UTMOSv2, omniASR_LLM_1B, Brouhaha and ECA
 Zip your submission and open a **New Submission** issue in this repository.
 See [SUBMISSION_FORMAT.md](SUBMISSION_FORMAT.md) for details.
 
----
-
-## Reproducing the baselines
-
-Each system in `inference/` has its own dependencies, which conflict with the evaluator and
-with each other. Every inference script declares them in [inline script metadata](https://docs.astral.sh/uv/guides/scripts/)
-at the top of the file, so `uv run` builds an isolated environment for it on first use (including
-an older Python where the model needs one); there is nothing to install by hand. Run the scripts
-from inside their folder: config paths are relative (`../../data/...`), and the submission is
-written to `submissions/<system>/`.
-
-| System | Folder | Command (from the folder) | Extra setup |
-|---|---|---|---|
-| OmniVoice (-FT, -FT-CS) | `inference/omnivoice/` | `uv run infer_omni.py --config-path configs/infer_omni[_ft\|_ft_cs].yaml` | |
-| MiraTTS (-FT, -FT-CS) | `inference/mira/` | `uv run infer_mira_t4.py --config-path configs/infer_mira[_ft\|_ft_cs].yaml` | |
-| Kiriku-TTS | `inference/kiriku/` | `uv run infer_kiriku.py --config-path configs/infer_kiriku.yaml` | |
-| Oolel-Voices | `inference/oolel/` | `uv run infer_oolel.py` | ffmpeg |
-| Adia-TTS | `inference/adia/` | `uv run infer_adia.py` | ffmpeg |
-| GalsenAI-TTS | `inference/galsenai/` | `uv run infer_galsenai.py` | checkpoint: `uvx gdown 1jsGAMBo354uRhwVKNnuJpLtq2uJYcVHN`, then unzip |
 
 ---
 
