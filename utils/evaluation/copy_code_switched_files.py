@@ -1,4 +1,8 @@
-#!/usr/bin/env python3
+#!/usr/bin/env -S uv run --script
+# /// script
+# requires-python = ">=3.10"
+# dependencies = []
+# ///
 """
 Copy Code-Switched Audio Files
 ===============================
@@ -18,7 +22,7 @@ Dataset structure expected
 
 Usage
 -----
-python copy_code_switched_files.py \
+uv run copy_code_switched_files.py \
     --json      ../../data/cs-evaluation/stats/code_switch_counts.json \
     --metadata  ../../data/corpus.csv \
     --audiodir  ../../submissions/omnivoice-ft-cs/audio/ \

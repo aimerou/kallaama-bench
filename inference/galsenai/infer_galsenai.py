@@ -1,17 +1,28 @@
+# /// script
+# requires-python = ">=3.10,<3.12"
+# dependencies = [
+#     "TTS==0.22.0",
+#     "torch==2.5.1",
+#     "torchaudio==2.5.1",
+#     "transformers>=4.45.2,<4.47",
+#     "tokenizers==0.20.1",
+#     "underthesea==6.8.4",
+#     "pandas<2.0",
+#     "setuptools<81",  # librosa 0.10.0 (pinned by TTS) imports pkg_resources
+#     "tqdm",
+# ]
+# ///
 """
 Requirements
 ------------
-Download model: gdown 1jsGAMBo354uRhwVKNnuJpLtq2uJYcVHN
+Download model: uvx gdown 1jsGAMBo354uRhwVKNnuJpLtq2uJYcVHN
 Unzip model: unzip galsenai-xtts-wo-checkpoints
-Clone repository: git clone https://github.com/nguyenhoanganh2002/XTTSv2-Finetuning-for-New-Languages.git
-Install dependencies: cd XTTSv2-Finetuning-for-New-Languages
-                      pip install -r requirements.txt
-                      pip install TTS
-Update the tokenizer.py file to support Wolof with the language code "wo"
+Python dependencies are declared in the inline script metadata above; `uv run` installs them
+in an isolated environment (Coqui TTS needs Python < 3.12, uv fetches one).
 
 Usage
 -----
-python infer_galsenai.py
+uv run infer_galsenai.py
 """
 
 import os
@@ -20,11 +31,18 @@ import time
 import torch
 import torchaudio
 import pandas as pd
+import TTS.tts.models.xtts as xtts_module
 from TTS.tts.configs.xtts_config import XttsConfig
 from TTS.tts.models.xtts import Xtts
 from tqdm import tqdm
 from underthesea import sent_tokenize
+import wolof_xtts_tokenizer
 from verbalizer import WolofTTSVerbalizer
+
+# Coqui TTS 0.22 has no Wolof ("wo") text rules: swap in wolof_xtts_tokenizer.py, a copy of
+# TTS/tts/layers/xtts/tokenizer.py with Wolof support, instead of editing the installed package.
+xtts_module.VoiceBpeTokenizer = wolof_xtts_tokenizer.VoiceBpeTokenizer
+xtts_module.split_sentence = wolof_xtts_tokenizer.split_sentence
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 

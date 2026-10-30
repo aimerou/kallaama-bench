@@ -1,10 +1,18 @@
-#!/usr/bin/env python3
+#!/usr/bin/env -S uv run --script
+# /// script
+# requires-python = ">=3.10"
+# dependencies = [
+#     "matplotlib",
+#     "fasttext-numpy2-wheel",
+#     "huggingface_hub",
+# ]
+# ///
 """
 French and English word counter per sentence (Wolof dataset).
 
 Usage
 -----
-python  counter_code_switched.py ../../data/corpus.csv \
+uv run counter_code_switched.py ../../data/corpus.csv \
     --outdir ../../data/cs-evaluation/stats/ \
     --column transcription \
     --delimiter "|" \

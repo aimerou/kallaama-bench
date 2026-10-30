@@ -1,8 +1,0 @@
-librosa>=0.10.2
-transformers==4.46.3
-diffusers==0.29.0
-conformer==0.3.2
-numpy>=2.0.0
-torchcodec
-s3tokenizer
-num2words

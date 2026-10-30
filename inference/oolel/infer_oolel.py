@@ -1,15 +1,34 @@
+# /// script
+# requires-python = ">=3.10"
+# dependencies = [
+#     "torch==2.8.0",
+#     "torchaudio==2.8.0",
+#     "torchcodec==0.7.0",
+#     "librosa>=0.10.2",
+#     "transformers==4.46.3",
+#     "diffusers==0.29.0",
+#     "conformer==0.3.2",
+#     "numpy>=2.0.0",
+#     "s3tokenizer",
+#     "num2words",
+#     "pandas",
+#     "tqdm",
+#     "huggingface_hub",
+# ]
+# ///
 """
 Oolel TTS Inference Script
 ==========================
 
 Requirements
 ------------
-pip install -r requirements.txt
+Dependencies are declared in the inline script metadata above; `uv run` installs them
+in an isolated environment. ffmpeg must be installed on the system:
 apt update && apt install -y ffmpeg
 
 Usage
 -----
-python infer_oolel.py
+uv run infer_oolel.py
 """
 
 import os

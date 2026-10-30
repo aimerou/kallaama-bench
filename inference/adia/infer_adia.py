@@ -1,15 +1,26 @@
+# /// script
+# requires-python = ">=3.10"
+# dependencies = [
+#     "parler-tts @ git+https://github.com/huggingface/parler-tts.git",
+#     "torch==2.8.0",
+#     "torchaudio==2.8.0",
+#     "pandas",
+#     "tqdm",
+# ]
+# ///
 """
 Adia TTS Inference Script
 =========================
 
 Requirements
 ------------
-pip install git+https://github.com/huggingface/parler-tts.git
+Dependencies are declared in the inline script metadata above; `uv run` installs them
+in an isolated environment. ffmpeg must be installed on the system:
 apt update && apt install -y ffmpeg
 
 Usage
 -----
-python infer_adia.py
+uv run infer_adia.py
 """
 
 import os

@@ -51,6 +51,8 @@ import utmosv2
 from jiwer import wer
 from scipy.stats import pearsonr
 from pyannote.audio import Model, Inference
+from pyannote.audio.core.model import Introspection
+from pyannote.audio.core.task import Problem, Resolution, Specifications
 from speechbrain.inference.speaker import EncoderClassifier
 from omnilingual_asr.models.inference.pipeline import ASRInferencePipeline
 
@@ -156,7 +158,11 @@ def load_models(asr_model_card: str = ASR_MODEL_CARD) -> dict:
 
     utmos_model  = utmosv2.create_model(pretrained=True)
     asr_pipeline = ASRInferencePipeline(model_card=asr_model_card, device=str(DEVICE))
-    brouhaha_model = Model.from_pretrained(BROUHAHA_MODEL_NAME, use_auth_token=HF_TOKEN)
+    # torch>=2.6 loads checkpoints with weights_only=True; the Brouhaha checkpoint
+    # also pickles these pyannote metadata classes, so allow exactly those.
+    with torch.serialization.safe_globals([Specifications, Resolution, Problem,
+                                           Introspection, torch.torch_version.TorchVersion]):
+        brouhaha_model = Model.from_pretrained(BROUHAHA_MODEL_NAME, use_auth_token=HF_TOKEN)
     brouhaha       = Inference(brouhaha_model, device=DEVICE)
     spkr_encoder = EncoderClassifier.from_hparams(
         source=SPKR_MODEL_NAME, run_opts={"device": str(DEVICE)}
