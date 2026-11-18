@@ -1,3 +1,14 @@
+# /// script
+# requires-python = ">=3.10"
+# dependencies = [
+#     "omnivoice",
+#     "pandas",
+#     "pyyaml",
+#     "soundfile",
+#     "tqdm",
+#     "huggingface_hub",
+# ]
+# ///
 """
 Produces a KallaamaBench submission folder:
     <output_dir>/
@@ -9,14 +20,14 @@ Produces a KallaamaBench submission folder:
 
 Requirements
 ------------
-1. Install dependencies
-    pip install --upgrade omnivoice
+1. Dependencies are declared in the inline script metadata above; `uv run` installs them
+   in an isolated environment.
 2. Set up environment variable for Hugging Face token
     export HF_TOKEN=your_huggingface_token
 
 Usage
 -----
-python infer_omni.py --config-path configs/infer_omni_ft_cs.yaml
+uv run infer_omni.py --config-path configs/infer_omni_ft_cs.yaml
 """
 
 import argparse

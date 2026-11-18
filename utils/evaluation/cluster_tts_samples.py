@@ -1,4 +1,13 @@
-#!/usr/bin/env python3
+#!/usr/bin/env -S uv run --script
+# /// script
+# requires-python = ">=3.10"
+# dependencies = [
+#     "librosa",
+#     "numpy",
+#     "matplotlib",
+#     "scikit-learn",
+# ]
+# ///
 """
 TTS Dataset Clustering: Morphology + F0 + Duration Features
 ============================================================
@@ -13,7 +22,7 @@ Dataset structure expected
 
 Usage
 -----
-python cluster_tts_samples.py \
+uv run cluster_tts_samples.py \
     --metadata  ../../data/corpus.csv \
     --audiodir  ../../data/audio \
     --outdir    ../../data/mos-evaluation/clustering/ \
